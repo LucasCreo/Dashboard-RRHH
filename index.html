@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard RRHH - Búsqueda Documental</title>
+    <style>
+        /* --- ESTILOS CSS (Diseño Centrado y Simple) --- */
+        :root {
+            --primary: #007bff;
+            --bg: #f4f6f9;
+            --card-bg: #ffffff;
+            --border: #dee2e6;
+            --text-main: #343a40;
+            /* Nuevos colores condicionales */
+            --color-celeste: #29b6f6; /* Celeste/Sky Blue para Conformidad OK */
+            --color-verde: #28a745; /* Verde para Firmado SI */
+            --color-rojo: #dc3545; /* Rojo para No Conforme / Firmado NO */
+            --color-amarillo: #ffc107; /* Amarillo para Pendiente */
+            --color-gris: #6c757d; /* Gris para Neutro */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: var(--text-main);
+        }
+
+        .container {
+            width: 100%;
+            /* Ajustado el ancho para la nueva cantidad de columnas */
+            max-width: 1400px; 
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow-x: auto; /* Permite scroll horizontal si es necesario */
+        }
+
+        h2 { 
+            color: var(--primary); 
+            border-bottom: 2px solid var(--primary); 
+            padding-bottom: 10px; 
+            margin-bottom: 25px; 
+            font-size: 1.8rem;
+        }
+        
+        /* Buscador */
+        .search-area { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 30px; 
+            align-items: flex-end;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            flex-wrap: wrap; 
+            /* Para centrar los botones ahora que no hay input principal */
+            justify-content: center; 
+        }
+
+        .form-group { flex: 1; min-width: 200px; }
+        .form-group.full-width { flex: 100%; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; }
+
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 1rem; 
+            border: 1px solid var(--border); 
+            border-radius: 5px; 
+            box-sizing: border-box;
+            background-color: white;
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+        button { 
+            padding: 10px 20px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: 600;
+            transition: background 0.2s;
+            height: 42px; 
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        button:hover { background: #0056b3; }
+
+        /* Contenedor de Filtros Avanzados (inicialmente oculto) */
+        #filtrosAvanzados {
+            display: none; /* Usaremos 'display: block' en JS al mostrar */
+            padding: 20px 15px 5px 15px;
+            margin-top: -15px;
+            background-color: #f8f9fa;
+            border-radius: 0 0 8px 8px;
+            border-top: 1px dashed var(--border);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        /* Estilos de Tabla y otros */
+        table { 
+            width: 100%; 
+            /* Min-width ajustado para las 11 columnas */
+            min-width: 1300px; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        th, td { 
+            text-align: left; 
+            padding: 10px 12px; 
+            border-bottom: 1px solid var(--border); 
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        th { 
+            background-color: #e9ecef; 
+            color: var(--text-main); 
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        tr:hover { background-color: #f7f7f7; }
+
+        /* Mensajes de Estado */
+        .status-msg { 
+            text-align: center; 
+            color: #6c757d; 
+            padding: 30px; 
+            font-style: italic; 
+        }
+
+        /* Spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .hidden { display: none; }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* --- CLASES DE COLOR ACTUALIZADAS --- */
+        
+        /* 1. Conformidad: 'Conforme' -> Celeste/Sky Blue (REQ: Celeste) */
+        .badge.conformidad-ok { 
+            background-color: var(--color-celeste); 
+            color: white; 
+        } 
+        /* Disconforme/No -> Rojo */
+        .badge.conformidad-disconforme { 
+            background-color: var(--color-rojo); 
+            color: white; 
+        } 
+        /* Pendiente -> Amarillo */
+        .badge.conformidad-pendiente { 
+            background-color: var(--color-amarillo); 
+            color: var(--text-main); 
+        } 
+
+        /* 2. Firmado: 'Si' -> Verde (REQ: Verde) */
+        .badge.firmado-si { 
+            background-color: var(--color-verde); 
+            color: white; 
+        }
+        /* Firmado: 'No' -> Rojo (Para contrastar la falta de firma) */
+        .badge.firmado-no {
+            background-color: var(--color-rojo);
+            color: white;
+        }
+        /* Firmado: 'Neutro' (Otros valores) -> Gris */
+        .badge.firmado-neutro {
+            background-color: var(--color-gris);
+            color: white;
+        }
+
+        .contact-info {
+            display: block;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔎 Búsqueda Documental</h2>
+    
+    <form id="searchForm">
+        <!-- Área de Búsqueda Principal (Solo queda con botones) -->
+        <div class="search-area">
+            
+            <button type="submit" onclick="consultarLegajo(event)">BUSCAR</button>
+            
+            <button type="button" id="btnFiltros" class="secondary" onclick="toggleFiltros()">
+                Filtros Avanzados (Mostrar)
+            </button>
+        </div>
+
+        <!-- Contenedor de Filtros Avanzados (Inicialmente oculto) -->
+        <div id="filtrosAvanzados">
+            <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 15px;">Filtros Opcionales</h3>
+            
+            <div class="filtros-grid">
+                
+                <!-- MOVIDO AQUÍ: Número de Legajo (Ahora Opcional) -->
+                <div class="form-group">
+                    <label for="txtLegajo">Número de Legajo</label>
+                    <input type="number" id="txtLegajo" name="legajo" placeholder="Ej: 12345">
+                </div>
+                
+                <!-- Filtros Solicitados: DNI y CUIL (existentes) -->
+                <div class="form-group">
+                    <label for="txtDNI">DNI</label>
+                    <input type="text" id="txtDNI" name="dni" placeholder="Ej: 30123456">
+                </div>
+                
+                <div class="form-group">
+                    <label for="txtCUIL">CUIL</label>
+                    <input type="text" id="txtCUIL" name="cuil" placeholder="Ej: 20-30123456-7">
+                </div>
+                <!-- Fin de Filtros Solicitados -->
+
+                <!-- Campos existentes -->
+                <div class="form-group">
+                    <label for="txtNombreApellido">Nombre y Apellido</label>
+                    <input type="text" id="txtNombreApellido" name="nombre_y_apellido" placeholder="Ej: Juan Pérez">
+                </div>
+                
+                <div class="form-group">
+                    <label for="txtCategoria">Categoría</label>
+                    <input type="text" id="txtCategoria" name="categoria" placeholder="Ej: Desarrollador">
+                </div>
+
+                <div class="form-group">
+                    <label for="txtObservaciones">Observaciones</label>
+                    <input type="text" id="txtObservaciones" name="observaciones" placeholder="Ej: Vacaciones">
+                </div>
+                
+                <div class="form-group">
+                    <label for="txtAnio">Año</label>
+                    <input type="number" id="txtAnio" name="anio" placeholder="Ej: 2024">
+                </div>
+
+                <div class="form-group">
+                    <label for="txtPeriodoMes">Período </label>
+                    <input type="text" id="txtPeriodoMes" name="periodo" placeholder="Ej: Noviembre">
+                </div>
+
+                <div class="form-group">
+                    <label for="selDocumentoFirmado">Documento Firmado</label>
+                    <select id="selDocumentoFirmado" name="firmado">
+                        <option value="">Cualquiera</option>
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="selConformidad">Conformidad</label>
+                    <select id="selConformidad" name="conformidad">
+                        <option value="">Cualquiera</option>
+                        <option value="1">Conforme </option>
+                        <option value="0">Disconforme</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="txtEmail">Email</label>
+                    <input type="email" id="txtEmail" name="mail" placeholder="Ej: juan@empresa.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="txtCelular">Nº Celular</label>
+                    <input type="text" id="txtCelular" name="numero_celular" placeholder="Ej: 11-5555-1234">
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <!-- Mensaje de Estado / Carga / Error -->
+    <div id="panelEstado" class="status-msg">
+        <p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>
+        <p>Utilice el botón "Filtros Avanzados" para ver todas las opciones.</p>
+    </div>
+
+    <!-- Tabla de Resultados -->
+    <table id="tablaResultados" class="hidden">
+        <thead>
+            <tr>
+                <!-- Orden Solicitado -->
+                <th>Nº Reg.</th>
+                <th>Clase Documental</th>
+                <th>Título del Documento</th>
+                <th>Legajo</th>
+                <th>Nombre y Apellido</th>
+                <th>Contacto </th>
+                <th>Categoría</th>
+                <th>Período </th>
+                <th>Firmado</th>
+                <th>Conformidad</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+            <!-- Datos inyectados por Javascript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    // La URL debe apuntar a tu servidor.cjs que está corriendo en el puerto 3000
+    const API_URL = 'http://localhost:3000/buscar'; 
+
+    /**
+     * Helper para obtener el valor del documento o un guion si está vacío/nulo.
+     * @param {string | number | null | undefined} value 
+     * @returns {string}
+     */
+    function getDisplayValue(value, placeholder = '-') {
+        // Convierte a string, elimina espacios y verifica si está vacío.
+        const stringValue = String(value || '').trim();
+        return stringValue === '' || stringValue === 'null' || stringValue === 'undefined' ? placeholder : stringValue;
+    }
+    
+    /**
+     * Determina si el valor original está vacío/nulo, lo que resulta en un guion ('-').
+     * @param {string | number | null | undefined} value 
+     * @returns {boolean}
+     */
+    function isDashValue(value) {
+        const stringValue = String(value || '').trim();
+        return stringValue === '' || stringValue === 'null' || stringValue === 'undefined';
+    }
+
+
+    /**
+     * Alterna la visibilidad del panel de filtros avanzados.
+     */
+    function toggleFiltros() {
+        const filtrosDiv = document.getElementById('filtrosAvanzados');
+        const btnFiltros = document.getElementById('btnFiltros');
+        
+        const isHidden = filtrosDiv.style.display === 'none';
+
+        if (isHidden) {
+            filtrosDiv.style.display = 'block'; 
+            btnFiltros.textContent = 'Filtros Avanzados (Ocultar)';
+            btnFiltros.classList.remove('secondary');
+            console.log("Filtros Avanzados: VISIBLES (display: block)"); 
+        } else {
+            filtrosDiv.style.display = 'none'; 
+            btnFiltros.textContent = 'Filtros Avanzados (Mostrar)';
+            btnFiltros.classList.add('secondary');
+            console.log("Filtros Avanzados: OCULTOS (display: none)");
+        }
+    }
+
+    /**
+     * Recoge TODOS los datos del formulario (Legajo + Filtros opcionales).
+     */
+    function obtenerParametrosBusqueda() {
+        const params = {};
+        const form = document.getElementById('searchForm');
+        
+        // Iterar sobre todos los elementos de input y select dentro del formulario que tienen 'name'
+        const allInputs = form.querySelectorAll('input[name], select[name]');
+        
+        allInputs.forEach(input => {
+            const name = input.name;
+            const value = input.value.trim(); 
+            
+            // Incluir el parámetro en el objeto, sin importar si el valor es vacío.
+            params[name] = value;
+        });
+        
+        return params;
+    }
+
+    /**
+     * Inicia el proceso de consulta a la API.
+     */
+    async function consultarLegajo(event) {
+        event.preventDefault(); // Previene el envío por defecto del formulario
+
+        const params = obtenerParametrosBusqueda();
+        
+        const panelEstado = document.getElementById('panelEstado');
+        const tabla = document.getElementById('tablaResultados');
+        const cuerpoTabla = document.getElementById('cuerpoTabla');
+
+        // Verificar si se ha ingresado AL MENOS un criterio de búsqueda
+        const hasFilters = Object.values(params).some(value => value.length > 0);
+
+        if (!hasFilters) {
+            panelEstado.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Debe ingresar al menos un criterio de búsqueda (ej: Legajo, DNI, o Nombre) para continuar.</p>`;
+            panelEstado.classList.remove('hidden');
+            tabla.classList.add('hidden');
+            return;
+        }
+
+        // 1. UI: Mostrar estado de carga
+        tabla.classList.add('hidden'); 
+        panelEstado.innerHTML = '<div class="loader"></div><p>Consultando...</p>';
+        panelEstado.classList.remove('hidden');
+
+        // Construir la URL con parámetros de consulta
+        const query = new URLSearchParams(params).toString();
+        const urlConFiltros = `${API_URL}?${query}`;
+        
+        console.log("URL de la consulta COMPLETA a la API:", urlConFiltros); 
+
+        try {
+            // 2. CONEXIÓN AL BACKEND PROXY (servidor.cjs)
+            const respuesta = await fetch(urlConFiltros);
+
+            if (!respuesta.ok) {
+                // Intenta parsear el JSON de error si está disponible
+                let errorDetail = 'Error desconocido al contactar al servidor proxy.';
+                try {
+                    const errorData = await respuesta.json(); 
+                    errorDetail = errorData.details || errorData.error || errorDetail;
+                } catch (e) {
+                    // Si no es JSON, usa el estado de la respuesta
+                    errorDetail = `Respuesta no exitosa (${respuesta.status} ${respuesta.statusText}).`;
+                }
+                throw new Error(`El Proxy falló al llamar a la API externa. Detalle: ${errorDetail}`);
+            }
+
+            const documentos = await respuesta.json();
+            cuerpoTabla.innerHTML = ''; // Limpiar filas
+
+            // 3. Rellenar la grilla
+            if (!Array.isArray(documentos) || documentos.length === 0) {
+                panelEstado.innerHTML = `
+                    <p>⚠️ No se encontraron documentos con los filtros aplicados.</p>
+                    <p>Intente simplificar los criterios de búsqueda.</p>
+                `;
+            } else {
+                
+                documentos.forEach((doc, index) => {
+                    
+                    // *****************************************************************
+                    // Lógica para 'Firmado'
+                    // *****************************************************************
+                    const rawFirmado = getDisplayValue(doc.firmado);
+                    let firmadoTag;
+
+                    if (rawFirmado === '-') {
+                        // Si es "-", se deja como texto simple
+                        firmadoTag = rawFirmado;
+                    } else {
+                        const normalizedFirmado = rawFirmado.toUpperCase();
+                        let firmadoClass = 'firmado-neutro';
+
+                        if (normalizedFirmado === 'SI' || normalizedFirmado === '1' || normalizedFirmado === 'TRUE') {
+                            firmadoClass = 'firmado-si'; // VERDE
+                        } else if (normalizedFirmado === 'NO' || normalizedFirmado === '0' || normalizedFirmado === 'FALSE') {
+                            firmadoClass = 'firmado-no'; // ROJO
+                        }
+
+                        firmadoTag = `<span class="badge ${firmadoClass}">${rawFirmado}</span>`;
+                    }
+                    // *****************************************************************
+                    
+                    
+                    // *****************************************************************
+                    // Lógica para 'Conformidad'
+                    // *****************************************************************
+                    const rawConformidad = getDisplayValue(doc.conformidad); // Esto es '-' si es null/empty
+                    let conformidadTag;
+
+                    if (rawConformidad === '-') {
+                        // Si es el guion, debe ser SIN COLOR (sin badge)
+                        conformidadTag = rawConformidad;
+                    } else {
+                        // Si tiene valor, aplicar la lógica de colores
+                        const normalizedConformidad = rawConformidad.toUpperCase();
+                        let conformidadClass;
+
+                        if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
+                            conformidadClass = 'conformidad-ok'; // CELESTE
+                        } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
+                            conformidadClass = 'conformidad-disconforme'; // ROJO
+                        } else {
+                            conformidadClass = 'conformidad-pendiente'; // AMARILLO
+                        }
+                        conformidadTag = `<span class="badge ${conformidadClass}">${rawConformidad}</span>`;
+                    }
+                    // *****************************************************************
+                    
+                    const periodoCompleto = `${getDisplayValue(doc.periodo, 'N/A')} - ${getDisplayValue(doc.anio, 'N/A')}`;
+
+                    const fila = `
+                        <tr>
+                            <!-- 1. Número de registro -->
+                            <td>${index + 1}</td>
+                            <!-- 2. Clase documental -->
+                            <td>${getDisplayValue(doc.object_definition_name, 'N/A')}</td>
+                            <!-- 3. Título del Documento -->
+                            <td>${getDisplayValue(doc.object_title, 'N/A')}</td>
+                            <!-- 4. Legajo -->
+                            <td>${getDisplayValue(doc.legajo)}</td>
+                            <!-- 5. Nombre y Apellido (Incluye DNI/CUIL para conservar la info) -->
+                            <td>
+                                <strong>${getDisplayValue(doc.nombre_y_apellido)}</strong>
+                                <span class="contact-info">DNI: ${getDisplayValue(doc.dni, 'N/A')} | CUIL: ${getDisplayValue(doc.cuil, 'N/A')}</span>
+                            </td>
+                            <!-- 6. Contacto -->
+                            <td>
+                                Mail: ${getDisplayValue(doc.mail, 'N/A')}
+                                <span class="contact-info">Tel: ${getDisplayValue(doc.numero_celular, 'N/A')}</span>
+                            </td>
+                            <!-- 7. Categoría -->
+                            <td>${getDisplayValue(doc.categoria)}</td>
+                            <!-- 8. Período -->
+                            <td>${periodoCompleto}</td>
+                            <!-- 9. Firmado -->
+                            <td>${firmadoTag}</td>
+                            <!-- 10. Conformidad -->
+                            <td>${conformidadTag}</td>
+                            <!-- 11. Observaciones -->
+                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>
+                        </tr>
+                    `;
+                    cuerpoTabla.innerHTML += fila;
+                });
+
+                // Mostrar la tabla y ocultar el mensaje de estado
+                panelEstado.classList.add('hidden');
+                tabla.classList.remove('hidden');
+            }
+
+        } catch (error) {
+            console.error("Error en el proceso:", error);
+            panelEstado.innerHTML = `
+                <p style="color: red;">❌ ERROR CRÍTICO:</p>
+                <p>Ocurrió un error al procesar la solicitud. Verifique que la API externa devuelva un Array de objetos o que el Proxy esté corriendo.</p>
+                <small>Mensaje: ${error.message}</small>
+            `;
+        }
+    }
+    
+    // Inicialización: Ocultar los filtros al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        const filtrosDiv = document.getElementById('filtrosAvanzados');
+        // Aseguramos que se oculte al inicio, tal como estaba en el script original
+        filtrosDiv.style.display = 'none'; 
+        
+        // El título del panel principal se ajusta ligeramente
+        document.querySelector('h2').textContent = '🔎 Búsqueda Documental';
+    });
+</script>
+
+</body>
+</html>
