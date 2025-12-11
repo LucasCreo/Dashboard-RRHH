@@ -374,18 +374,8 @@
 </div>
 
 <script>
-    // *************************************************************************
-    // ⚠️ ¡URL DE PRODUCCIÓN!
-    // Reemplace esta URL por la dirección PÚBLICA y COMPLETA de su Webhook/Proxy.
-    // Ej: https://tudominio.com/api/buscar
-    // *************************************************************************
-    const API_URL = 'http://REEMPLAZAR-CON-URL-PUBLICA-REAL/buscar'; 
+    const API_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
 
-    /**
-     * Helper para obtener el valor del documento o un guion si está vacío/nulo.
-     * @param {string | number | null | undefined} value 
-     * @returns {string}
-     */
     function getDisplayValue(value, placeholder = '-') {
         // Convierte a string, elimina espacios y verifica si está vacío.
         const stringValue = String(value || '').trim();
@@ -613,12 +603,8 @@
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ ERROR DE CONEXIÓN (Bloqueo de Seguridad):</p>
-                    <p>La solicitud NO está llegando a su Webhook/n8n. Esto es una restricción de la plataforma de la empresa.</p>
-                    <p><strong>Causa probable:</strong> La Política de Seguridad de Contenido (CSP) de la plataforma está bloqueando llamadas a dominios externos.</p>
-                    <p><strong>Acción requerida:</strong> Contacte a IT para que **incluyan el dominio completo del Webhook** en la lista blanca de la CSP de la plataforma.</p>
-                    <small>Asegúrese de que el Webhook esté corriendo y que la URL (${API_URL}) sea correcta.</small>
-                `;
+                    <p style="color: red;">❌ Sin resultados</p>
+                `
             }
 
             panelEstado.innerHTML = mensajeErrorHTML;
