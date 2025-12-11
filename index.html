@@ -345,8 +345,7 @@
 </div>
 
 <script>
-    // La URL debe apuntar a tu servidor.cjs que está corriendo en el puerto 3000
-    const API_URL = 'http://localhost:3000/buscar'; 
+    const API_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
 
     /**
      * Helper para obtener el valor del documento o un guion si está vacío/nulo.
@@ -429,7 +428,7 @@
         const hasFilters = Object.values(params).some(value => value.length > 0);
 
         if (!hasFilters) {
-            panelEstado.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Debe ingresar al menos un criterio de búsqueda (ej: Legajo, DNI, o Nombre) para continuar.</p>`;
+            panelEstado.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Debe ingresar al menos un criterio de búsqueda (ej: Legajo, DNI, o Nombre) y presionar Buscar.</p>`;
             panelEstado.classList.remove('hidden');
             tabla.classList.add('hidden');
             return;
@@ -442,12 +441,13 @@
 
         // Construir la URL con parámetros de consulta
         const query = new URLSearchParams(params).toString();
+        // NOTA: Se asume que la API_URL termina antes de los parámetros
         const urlConFiltros = `${API_URL}?${query}`;
         
         console.log("URL de la consulta COMPLETA a la API:", urlConFiltros); 
 
         try {
-            // 2. CONEXIÓN AL BACKEND PROXY (servidor.cjs)
+            // 2. CONEXIÓN AL BACKEND PROXY (Webhook)
             const respuesta = await fetch(urlConFiltros);
 
             if (!respuesta.ok) {
@@ -460,7 +460,8 @@
                     // Si no es JSON, usa el estado de la respuesta
                     errorDetail = `Respuesta no exitosa (${respuesta.status} ${respuesta.statusText}).`;
                 }
-                throw new Error(`El Proxy falló al llamar a la API externa. Detalle: ${errorDetail}`);
+                // Si llegamos aquí con un fetch() que falló, significa un error de red/cors/url.
+                throw new Error(`El Proxy falló al llamar a la API externa. Verifique la URL de la API_URL y CORS. Detalle: ${errorDetail}`);
             }
 
             const documentos = await respuesta.json();
@@ -571,7 +572,8 @@
             console.error("Error en el proceso:", error);
             panelEstado.innerHTML = `
                 <p style="color: red;">❌ ERROR CRÍTICO:</p>
-                <p>Ocurrió un error al procesar la solicitud. Verifique que la API externa devuelva un Array de objetos o que el Proxy esté corriendo.</p>
+                <p>Ocurrió un error al procesar la solicitud.</p>
+                <p><strong>Causa más probable:</strong> La URL del Webhook (${API_URL}) es incorrecta o hay un problema de CORS.</p>
                 <small>Mensaje: ${error.message}</small>
             `;
         }
