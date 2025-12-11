@@ -596,9 +596,7 @@
             console.error("Error en el proceso (Verifique CSP):", error);
             
             let mensajeErrorHTML = `
-                <p style="color: red;">❌ ERROR CRÍTICO: ${error.message}</p>
-                <p>Ocurrió un error al procesar la solicitud (Revise el Webhook).</p>
-            `;
+                <p style="color: red;">❌Sin Resultados</p>`;
             
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
