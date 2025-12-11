@@ -124,10 +124,11 @@
         /* Estilos de Tabla y otros */
         table { 
             width: 100%; 
-            /* Min-width ajustado para las 11 columnas */
             min-width: 1300px; 
             border-collapse: collapse; 
             margin-top: 10px; 
+            /* --- CAMBIO 1: Aseguramos el layout fijo para alinear columnas --- */
+            table-layout: fixed; 
         }
         th, td { 
             text-align: left; 
@@ -135,18 +136,42 @@
             border-bottom: 1px solid var(--border); 
             white-space: nowrap;
             font-size: 0.9rem;
+            overflow: hidden; /* Ocultar el texto que excede el ancho fijo */
+            text-overflow: ellipsis; /* Mostrar puntos suspensivos */
         }
         th { 
             background-color: #e9ecef; 
             color: var(--text-main); 
-            /* --- CAMBIO DE LA OPCIÓN 1 ---
-               Se elimina position: sticky, top: 0 y z-index
-               para evitar la desincronización de columnas con zoom/scroll.
-            */
+            /* --- CAMBIO 2: Eliminación Correcta de position: sticky --- */
             position: static; 
-            /* top: 0; */
-            /* z-index: 10; */
+            /* top: 0; */ /* Eliminado */
+            /* z-index: 10; */ /* Eliminado */
         }
+        
+        /* Definición de Anchos Específicos para Columnas (Mejora de table-layout: fixed) */
+        #tablaResultados thead tr th:nth-child(1), 
+        #tablaResultados tbody tr td:nth-child(1) { width: 4%; } /* Nº Reg. */
+        #tablaResultados thead tr th:nth-child(2), 
+        #tablaResultados tbody tr td:nth-child(2) { width: 12%; } /* Clase Documental */
+        #tablaResultados thead tr th:nth-child(3), 
+        #tablaResultados tbody tr td:nth-child(3) { width: 15%; } /* Título */
+        #tablaResultados thead tr th:nth-child(4), 
+        #tablaResultados tbody tr td:nth-child(4) { width: 5%; } /* Legajo */
+        #tablaResultados thead tr th:nth-child(5), 
+        #tablaResultados tbody tr td:nth-child(5) { width: 18%; } /* Nombre y Apellido + DNI/CUIL */
+        #tablaResultados thead tr th:nth-child(6), 
+        #tablaResultados tbody tr td:nth-child(6) { width: 15%; } /* Contacto */
+        #tablaResultados thead tr th:nth-child(7), 
+        #tablaResultados tbody tr td:nth-child(7) { width: 8%; } /* Categoría */
+        #tablaResultados thead tr th:nth-child(8), 
+        #tablaResultados tbody tr td:nth-child(8) { width: 6%; } /* Período */
+        #tablaResultados thead tr th:nth-child(9), 
+        #tablaResultados tbody tr td:nth-child(9) { width: 7%; } /* Firmado */
+        #tablaResultados thead tr th:nth-child(10), 
+        #tablaResultados tbody tr td:nth-child(10) { width: 10%; } /* Conformidad */
+        #tablaResultados thead tr th:nth-child(11), 
+        #tablaResultados tbody tr td:nth-child(11) { width: 10%; } /* Observaciones */
+
         tr:hover { background-color: #f7f7f7; }
 
         /* Mensajes de Estado */
