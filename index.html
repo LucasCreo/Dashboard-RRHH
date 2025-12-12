@@ -153,11 +153,11 @@
 
         /* Estilos de Tabla y otros */
         table { 
-            width: 100%; 
+            /* Se mantiene el min-width en la tabla para forzar el scroll horizontal cuando sea necesario */
             min-width: 1300px; 
+            width: 100%; /* Asegura que la tabla use todo el ancho disponible */
             border-collapse: collapse; 
-            margin-top: 10px; 
-            /* --- CAMBIO 1: Aseguramos el layout fijo para alinear columnas --- */
+            font-size: 0.9rem;
             table-layout: fixed; 
         }
         th, td { 
