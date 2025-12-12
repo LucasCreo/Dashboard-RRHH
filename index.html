@@ -33,13 +33,16 @@
 
         .container {
             width: 100%;
-            /* Ajustado el ancho para la nueva cantidad de columnas */
+            /* Ajuste Clave 1: Usamos un max-width flexible, pero forzamos el contenido a expandirse
+               si la tabla interna es más ancha */
             max-width: 1400px; 
             background: var(--card-bg);
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow-x: auto; /* Permite scroll horizontal si es necesario */
+            /* Importante: El scroll horizontal se manejará en el cuerpo de la tabla si es necesario */
+            overflow: visible; 
+            /* Para que el contenedor se ajuste al ancho que su contenido interno le dicte si es más grande */
         }
 
         h2 { 
@@ -272,6 +275,24 @@
             display: block;
             font-size: 0.8em;
             color: #6c757d;
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            .container { padding: 20px; }
+            .filtros-grid {
+                /* Aseguramos una columna en móvil si el ancho es muy reducido */
+                grid-template-columns: 1fr; 
+            }
+            .search-area {
+                /* Aseguramos que los botones se apilen en móvil */
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-area button { width: 100%; }
+            
+            /* El table-wrapper ya maneja el scroll en móvil si la tabla es más ancha */
         }
     </style>
 </head>
