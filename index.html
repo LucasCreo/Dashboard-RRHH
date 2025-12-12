@@ -144,8 +144,6 @@
             color: var(--text-main); 
             /* --- CAMBIO 2: Eliminación Correcta de position: sticky --- */
             position: static; 
-            /* top: 0; */ /* Eliminado */
-            /* z-index: 10; */ /* Eliminado */
         }
         
         /* Definición de Anchos Específicos para Columnas (Mejora de table-layout: fixed) */
@@ -525,6 +523,7 @@
                     // *****************************************************************
                     
                     
+                    
                     // *****************************************************************
                     // Lógica para 'Conformidad'
                     // *****************************************************************
@@ -601,7 +600,8 @@
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ Sin resultados</p>`
+                    <p style="color: red;">❌ Sin resultados</p>
+                `
             }
 
             panelEstado.innerHTML = mensajeErrorHTML;
