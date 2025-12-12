@@ -33,13 +33,16 @@
 
         .container {
             width: 100%;
-            /* Ajustado el ancho para la nueva cantidad de columnas */
+            /* Ajuste Clave 1: Usamos un max-width flexible, pero forzamos el contenido a expandirse
+               si la tabla interna es más ancha */
             max-width: 1400px; 
             background: var(--card-bg);
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow-x: auto; /* Permite scroll horizontal si es necesario */
+            /* Importante: El scroll horizontal se manejará en el cuerpo de la tabla si es necesario */
+            overflow: visible; 
+            /* Para que el contenedor se ajuste al ancho que su contenido interno le dicte si es más grande */
         }
 
         h2 { 
@@ -60,7 +63,6 @@
             background-color: #f8f9fa;
             border-radius: 8px;
             flex-wrap: wrap; 
-            /* Para centrar los botones ahora que no hay input principal */
             justify-content: center; 
         }
 
@@ -98,20 +100,10 @@
             background: #5a6268;
         }
         button:hover { background: #0056b3; }
-        
-        /* Modificación: El botón Limpiar ahora usa el estilo primario */
-        button#btnLimpiar {
-            background: var(--primary); /* Fondo azul */
-            color: white;
-        }
-        button#btnLimpiar:hover {
-            background: #0056b3; /* Darker blue on hover */
-        }
-
 
         /* Contenedor de Filtros Avanzados (inicialmente oculto) */
         #filtrosAvanzados {
-            display: none; /* Usaremos 'display: block' en JS al mostrar */
+            display: none; 
             padding: 20px 15px 5px 15px;
             margin-top: -15px;
             background-color: #f8f9fa;
@@ -131,43 +123,43 @@
             margin-bottom: 20px;
         }
         
-        /* Modificación: Contenedor de botones alineado a la izquierda */
-        .filtros-actions {
-            display: flex;
-            justify-content: flex-start; /* ALINEAR A LA IZQUIERDA */
-            gap: 15px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+        /* Contenedor de la tabla para manejar el scroll horizontal
+           Se añade este div envolvente para controlar el overflow de la tabla sin afectar 
+           la sección de filtros y su fondo */
+        .table-wrapper {
+            /* Ajuste Clave 2: Fuerza a que el contenedor sea tan ancho como la tabla interna */
+            min-width: 100%; 
+            /* Ajuste Clave 3: Permite el scroll SÓLO en esta área si la tabla lo excede */
+            overflow-x: auto; 
+            padding-top: 10px; /* Separación de la barra de filtros */
         }
-
+        
         /* Estilos de Tabla y otros */
         table { 
-            width: 100%; 
+            /* Se mantiene el min-width en la tabla para forzar el scroll horizontal cuando sea necesario */
             min-width: 1300px; 
+            width: 100%; /* Asegura que la tabla use todo el ancho disponible */
             border-collapse: collapse; 
-            margin-top: 10px; 
-            /* --- CAMBIO 1: Aseguramos el layout fijo para alinear columnas --- */
+            font-size: 0.9rem;
             table-layout: fixed; 
         }
+        
         th, td { 
             text-align: left; 
             padding: 10px 12px; 
             border-bottom: 1px solid var(--border); 
             white-space: nowrap;
             font-size: 0.9rem;
-            overflow: hidden; /* Ocultar el texto que excede el ancho fijo */
-            text-overflow: ellipsis; /* Mostrar puntos suspensivos */
+            overflow: hidden; 
+            text-overflow: ellipsis; 
         }
         th { 
             background-color: #e9ecef; 
             color: var(--text-main); 
-            /* --- CAMBIO 2: Eliminación Correcta de position: sticky --- */
             position: static; 
-            /* top: 0; */ /* Eliminado */
-            /* z-index: 10; */ /* Eliminado */
         }
         
-        /* Definición de Anchos Específicos para Columnas (Mejora de table-layout: fixed) */
+        /* Definición de Anchos Específicos para Columnas */
         #tablaResultados thead tr th:nth-child(1), 
         #tablaResultados tbody tr td:nth-child(1) { width: 4%; } /* Nº Reg. */
         #tablaResultados thead tr th:nth-child(2), 
@@ -262,6 +254,24 @@
             font-size: 0.8em;
             color: #6c757d;
         }
+        
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            body { padding: 20px; }
+            .container { padding: 20px; }
+            .filtros-grid {
+                /* Aseguramos una columna en móvil si el ancho es muy reducido */
+                grid-template-columns: 1fr; 
+            }
+            .search-area {
+                /* Aseguramos que los botones se apilen en móvil */
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-area button { width: 100%; }
+            
+            /* El table-wrapper ya maneja el scroll en móvil si la tabla es más ancha */
+        }
     </style>
 </head>
 <body>
@@ -270,10 +280,11 @@
     <h2>🔎 Búsqueda Documental</h2>
     
     <form id="searchForm">
-        <!-- Área de Búsqueda Principal (Solo queda con el botón de Filtros Avanzados) -->
+        <!-- Área de Búsqueda Principal (Solo queda con botones) -->
         <div class="search-area">
             
-            <!-- Ahora solo queda el botón de mostrar/ocultar filtros -->
+            <button type="submit" onclick="consultarLegajo(event)">BUSCAR</button>
+            
             <button type="button" id="btnFiltros" class="secondary" onclick="toggleFiltros()">
                 Filtros Avanzados (Mostrar)
             </button>
@@ -333,8 +344,8 @@
                     <label for="selDocumentoFirmado">Documento Firmado</label>
                     <select id="selDocumentoFirmado" name="firmado">
                         <option value="">Cualquiera</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
                     </select>
                 </div>
 
@@ -342,8 +353,8 @@
                     <label for="selConformidad">Conformidad</label>
                     <select id="selConformidad" name="conformidad">
                         <option value="">Cualquiera</option>
-                        <option value="Conforme">Conforme </option>
-                        <option value="Disconforme">Disconforme</option>
+                        <option value="1">Conforme </option>
+                        <option value="0">Disconforme</option>
                     </select>
                 </div>
 
@@ -357,19 +368,6 @@
                     <input type="text" id="txtCelular" name="numero_celular" placeholder="Ej: 11-5555-1234">
                 </div>
             </div>
-            
-            <!-- Contenedor de botones de acción para los filtros (Ahora a la izquierda) -->
-            <div class="filtros-actions">
-                <!-- Botón BUSCAR (Movido aquí y texto cambiado a "Buscar") -->
-                <button type="submit" onclick="consultarLegajo(event)">
-                    Buscar
-                </button>
-                <!-- Botón LIMPIAR (Fondo cambiado para que coincida con Buscar) -->
-                <button type="button" id="btnLimpiar" onclick="limpiarFiltros()">
-                    Limpiar
-                </button>
-            </div>
-            
         </div>
     </form>
 
@@ -380,28 +378,31 @@
         <p>Utilice el botón "Filtros Avanzados" para ver todas las opciones.</p>
     </div>
 
-    <!-- Tabla de Resultados -->
-    <table id="tablaResultados" class="hidden">
-        <thead>
-            <tr>
-                <!-- Orden Solicitado -->
-                <th>Nº Reg.</th>
-                <th>Clase Documental</th>
-                <th>Título del Documento</th>
-                <th>Legajo</th>
-                <th>Nombre y Apellido</th>
-                <th>Contacto </th>
-                <th>Categoría</th>
-                <th>Período </th>
-                <th>Firmado</th>
-                <th>Conformidad</th>
-                <th>Observaciones</th>
-            </tr>
-        </thead>
-        <tbody id="cuerpoTabla">
-            <!-- Datos inyectados por Javascript -->
-        </tbody>
-    </table>
+    <!-- Contenedor para la tabla que permite el scroll horizontal -->
+    <div class="table-wrapper">
+        <!-- Tabla de Resultados -->
+        <table id="tablaResultados" class="hidden">
+            <thead>
+                <tr>
+                    <!-- Orden Solicitado -->
+                    <th>Nº Reg.</th>
+                    <th>Clase Documental</th>
+                    <th>Título del Documento</th>
+                    <th>Legajo</th>
+                    <th>Nombre y Apellido</th>
+                    <th>Contacto </th>
+                    <th>Categoría</th>
+                    <th>Período </th>
+                    <th>Firmado</th>
+                    <th>Conformidad</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Datos inyectados por Javascript -->
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -412,7 +413,12 @@
         const stringValue = String(value || '').trim();
         return stringValue === '' || stringValue === 'null' || stringValue === 'undefined' ? placeholder : stringValue;
     }
-
+    
+    /**
+     * Determina si el valor original está vacío/nulo, lo que resulta en un guion ('-').
+     * @param {string | number | null | undefined} value 
+     * @returns {boolean}
+     */
     function isDashValue(value) {
         const stringValue = String(value || '').trim();
         return stringValue === '' || stringValue === 'null' || stringValue === 'undefined';
@@ -439,22 +445,6 @@
             btnFiltros.classList.add('secondary');
             console.log("Filtros Avanzados: OCULTOS (display: none)");
         }
-    }
-    
-    /**
-     * Limpia todos los campos del formulario de filtros.
-     */
-    function limpiarFiltros() {
-        const form = document.getElementById('searchForm');
-        // El método .reset() funciona para limpiar todos los inputs/selects/textareas
-        form.reset();
-        
-        // Opcional: Ocultar resultados y mostrar mensaje inicial después de limpiar
-        document.getElementById('tablaResultados').classList.add('hidden');
-        const panelEstado = document.getElementById('panelEstado');
-        panelEstado.innerHTML = `<p>Filtros restablecidos.</p><p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>`;
-        panelEstado.classList.remove('hidden');
-        console.log("Filtros limpiados.");
     }
 
     /**
@@ -555,11 +545,9 @@
                     } else {
                         const normalizedFirmado = rawFirmado.toUpperCase();
                         let firmadoClass = 'firmado-neutro';
-                        
-                        // Lógica de valores: "SI", "1", "TRUE"
+
                         if (normalizedFirmado === 'SI' || normalizedFirmado === '1' || normalizedFirmado === 'TRUE') {
                             firmadoClass = 'firmado-si'; // VERDE
-                        // Lógica de valores: "NO", "0", "FALSE"
                         } else if (normalizedFirmado === 'NO' || normalizedFirmado === '0' || normalizedFirmado === 'FALSE') {
                             firmadoClass = 'firmado-no'; // ROJO
                         }
@@ -583,10 +571,8 @@
                         const normalizedConformidad = rawConformidad.toUpperCase();
                         let conformidadClass;
 
-                        // Lógica de valores: "CONFORME", "OK", "1"
                         if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
                             conformidadClass = 'conformidad-ok'; // CELESTE
-                        // Lógica de valores: "DISCONFORME", "NO", "0"
                         } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
                             conformidadClass = 'conformidad-disconforme'; // ROJO
                         } else {
@@ -642,14 +628,14 @@
             console.error("Error en el proceso (Verifique CSP):", error);
             
             let mensajeErrorHTML = `
-                <p style="color: red;">❌ ERROR CRÍTICO: ${error.message}</p>
-                <p>Ocurrió un error al procesar la solicitud (Revise el Webhook).</p>
-            `;
+                <p style="color: red;">❌Sin Resultados</p>`;
             
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ Sin Resultados </p>`;}
+                    <p style="color: red;">❌ Sin resultados</p>
+                `
+            }
 
             panelEstado.innerHTML = mensajeErrorHTML;
         }
@@ -658,10 +644,8 @@
     // Inicialización: Ocultar los filtros al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
         const filtrosDiv = document.getElementById('filtrosAvanzados');
-        // Aseguramos que se oculte al inicio, tal como estaba en el script original
         filtrosDiv.style.display = 'none'; 
         
-        // El título del panel principal se ajusta ligeramente
         document.querySelector('h2').textContent = '🔎 Búsqueda Documental';
     });
 </script>
