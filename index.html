@@ -28,558 +28,522 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
-            color: var(--text-main);
+            margin: 0;
         }
 
-        .container {
+        .contenedor-principal {
             width: 100%;
-            /* Ajustado el ancho para la nueva cantidad de columnas */
-            max-width: 1400px; 
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow-x: auto; /* Permite scroll horizontal si es necesario */
+            max-width: 1000px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: var(--card-bg);
         }
 
-        h2 { 
-            color: var(--primary); 
-            border-bottom: 2px solid var(--primary); 
-            padding-bottom: 10px; 
-            margin-bottom: 25px; 
-            font-size: 1.8rem;
+        .panel-contenido {
+            padding: 30px;
+            border-bottom: 1px solid var(--border);
         }
         
-        /* Buscador */
-        .search-area { 
-            display: flex; 
-            gap: 15px; 
-            margin-bottom: 30px; 
-            align-items: flex-end;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            flex-wrap: wrap; 
-            /* Para centrar los botones ahora que no hay input principal */
-            justify-content: center; 
+        /* Estilo para el título */
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
         }
 
-        .form-group { flex: 1; min-width: 200px; }
-        .form-group.full-width { flex: 100%; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-
-        input, select { 
-            width: 100%; 
-            padding: 10px; 
-            font-size: 1rem; 
-            border: 1px solid var(--border); 
-            border-radius: 5px; 
-            box-sizing: border-box;
-            background-color: white;
+        /* Estilo para los grupos de input/select */
+        .input-group {
+            margin-bottom: 15px;
         }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
 
-        button { 
-            padding: 10px 20px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 1rem; 
+        .input-group label {
+            display: block;
             font-weight: 600;
-            transition: background 0.2s;
-            height: 42px; 
+            margin-bottom: 5px;
+            color: var(--text-main);
+            font-size: 0.9em;
         }
-        button.secondary {
-            background: #6c757d;
-        }
-        button.secondary:hover {
-            background: #5a6268;
-        }
-        button:hover { background: #0056b3; }
 
-        /* Contenedor de Filtros Avanzados (inicialmente oculto) */
-        #filtrosAvanzados {
-            display: none; /* Usaremos 'display: block' en JS al mostrar */
-            padding: 20px 15px 5px 15px;
-            margin-top: -15px;
+        .input-group input[type="text"],
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input[type="text"]:focus,
+        .input-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        /* Botones generales */
+        button {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* TABLA DE RESULTADOS */
+        #tablaResultados {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        #tablaResultados th,
+        #tablaResultados td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        #tablaResultados th {
+            background-color: #e9ecef;
+            color: var(--text-main);
+            font-weight: 700;
+            position: sticky; /* Fija los encabezados al hacer scroll */
+            top: 0;
+            z-index: 10;
+        }
+
+        #tablaResultados tbody tr:hover {
             background-color: #f8f9fa;
-            border-radius: 0 0 8px 8px;
-            border-top: 1px dashed var(--border);
-            animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
-        .filtros-grid {
+        /* Panel de estado y mensaje de error */
+        #panelEstado {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-main);
+            font-size: 1.1em;
+        }
+
+        /* Utilidad para ocultar elementos */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Estilos para etiquetas condicionales */
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8em;
+            color: white;
+            text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+        }
+        .tag-verde { background-color: var(--color-verde); }
+        .tag-celeste { background-color: var(--color-celeste); }
+        .tag-rojo { background-color: var(--color-rojo); }
+        .tag-amarillo { background-color: var(--color-amarillo); }
+        .tag-gris { background-color: var(--color-gris); }
+
+        /* Estilos de responsividad para filtros */
+        .grid-2-cols {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
+            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+            gap: 20px; /* Espacio entre los elementos */
             margin-bottom: 20px;
         }
         
-        /* Estilos de Tabla y otros */
-        table { 
-            width: 100%; 
-            min-width: 1300px; 
-            border-collapse: collapse; 
-            margin-top: 10px; 
-            /* --- CAMBIO 1: Aseguramos el layout fijo para alinear columnas --- */
-            table-layout: fixed; 
-        }
-        th, td { 
-            text-align: left; 
-            padding: 10px 12px; 
-            border-bottom: 1px solid var(--border); 
-            white-space: nowrap;
-            font-size: 0.9rem;
-            overflow: hidden; /* Ocultar el texto que excede el ancho fijo */
-            text-overflow: ellipsis; /* Mostrar puntos suspensivos */
-        }
-        th { 
-            background-color: #e9ecef; 
-            color: var(--text-main); 
-            /* --- CAMBIO 2: Eliminación Correcta de position: sticky --- */
-            position: static; 
-        }
-        
-        /* Definición de Anchos Específicos para Columnas (Mejora de table-layout: fixed) */
-        #tablaResultados thead tr th:nth-child(1), 
-        #tablaResultados tbody tr td:nth-child(1) { width: 4%; } /* Nº Reg. */
-        #tablaResultados thead tr th:nth-child(2), 
-        #tablaResultados tbody tr td:nth-child(2) { width: 12%; } /* Clase Documental */
-        #tablaResultados thead tr th:nth-child(3), 
-        #tablaResultados tbody tr td:nth-child(3) { width: 15%; } /* Título */
-        #tablaResultados thead tr th:nth-child(4), 
-        #tablaResultados tbody tr td:nth-child(4) { width: 5%; } /* Legajo */
-        #tablaResultados thead tr th:nth-child(5), 
-        #tablaResultados tbody tr td:nth-child(5) { width: 18%; } /* Nombre y Apellido + DNI/CUIL */
-        #tablaResultados thead tr th:nth-child(6), 
-        #tablaResultados tbody tr td:nth-child(6) { width: 15%; } /* Contacto */
-        #tablaResultados thead tr th:nth-child(7), 
-        #tablaResultados tbody tr td:nth-child(7) { width: 8%; } /* Categoría */
-        #tablaResultados thead tr th:nth-child(8), 
-        #tablaResultados tbody tr td:nth-child(8) { width: 6%; } /* Período */
-        #tablaResultados thead tr th:nth-child(9), 
-        #tablaResultados tbody tr td:nth-child(9) { width: 7%; } /* Firmado */
-        #tablaResultados thead tr th:nth-child(10), 
-        #tablaResultados tbody tr td:nth-child(10) { width: 10%; } /* Conformidad */
-        #tablaResultados thead tr th:nth-child(11), 
-        #tablaResultados tbody tr td:nth-child(11) { width: 10%; } /* Observaciones */
-
-        tr:hover { background-color: #f7f7f7; }
-
-        /* Mensajes de Estado */
-        .status-msg { 
-            text-align: center; 
-            color: #6c757d; 
-            padding: 30px; 
-            font-style: italic; 
+        /* ESTILO NUEVO: Para agrupar los botones de Buscar y Limpiar a la izquierda */
+        .button-group-left {
+            display: flex;
+            gap: 10px; /* Espacio entre los botones */
+            justify-content: flex-start; /* Alineación a la izquierda */
+            padding-top: 10px;
         }
 
-        /* Spinner */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px auto;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .hidden { display: none; }
-        
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        /* --- CLASES DE COLOR ACTUALIZADAS --- */
-        
-        /* 1. Conformidad: 'Conforme' -> Celeste/Sky Blue (REQ: Celeste) */
-        .badge.conformidad-ok { 
-            background-color: var(--color-celeste); 
-            color: white; 
-        } 
-        /* Disconforme/No -> Rojo */
-        .badge.conformidad-disconforme { 
-            background-color: var(--color-rojo); 
-            color: white; 
-        } 
-        /* Pendiente -> Amarillo */
-        .badge.conformidad-pendiente { 
-            background-color: var(--color-amarillo); 
-            color: var(--text-main); 
-        } 
-
-        /* 2. Firmado: 'Si' -> Verde (REQ: Verde) */
-        .badge.firmado-si { 
-            background-color: var(--color-verde); 
-            color: white; 
-        }
-        /* Firmado: 'No' -> Rojo (Para contrastar la falta de firma) */
-        .badge.firmado-no {
-            background-color: var(--color-rojo);
-            color: white;
-        }
-        /* Firmado: 'Neutro' (Otros valores) -> Gris */
-        .badge.firmado-neutro {
-            background-color: var(--color-gris);
-            color: white;
-        }
-
-        .contact-info {
-            display: block;
-            font-size: 0.8em;
-            color: #6c757d;
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            .grid-2-cols {
+                grid-template-columns: 1fr; /* Una columna en móviles */
+            }
+            #tablaResultados {
+                display: block;
+                overflow-x: auto; /* Permite scroll horizontal en tablas grandes */
+                white-space: nowrap;
+            }
+            .panel-contenido {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🔎 Búsqueda Documental</h2>
+<div class="contenedor-principal">
     
-    <form id="searchForm">
-        <!-- Área de Búsqueda Principal (Solo queda con botones) -->
-        <div class="search-area">
-            
-            <button type="submit" onclick="consultarLegajo(event)">BUSCAR</button>
-            
-            <button type="button" id="btnFiltros" class="secondary" onclick="toggleFiltros()">
-                Filtros Avanzados (Mostrar)
-            </button>
+    <!-- 1. PANEL PRINCIPAL Y BÚSQUEDA RÁPIDA -->
+    <div class="panel-contenido">
+        <h2>🔎 Búsqueda Documental</h2>
+
+        <!-- Input Principal -->
+        <div class="input-group">
+            <label for="txtRUC">Ingrese RUC a buscar:</label>
+            <!-- Usaremos un 'form' simple para capturar el Enter -->
+            <form id="formBusquedaPrincipal" onsubmit="buscarDatos(event); return false;">
+                <input type="text" id="txtRUC" placeholder="Escriba RUC o DNI (ej: 20500000001)" required>
+                <!-- El botón Buscar se ha movido al panel de filtros -->
+            </form>
         </div>
 
-        <!-- Contenedor de Filtros Avanzados (Inicialmente oculto) -->
-        <div id="filtrosAvanzados">
-            <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 15px;">Filtros Opcionales</h3>
-            
-            <div class="filtros-grid">
-                
-                <!-- MOVIDO AQUÍ: Número de Legajo (Ahora Opcional) -->
-                <div class="form-group">
-                    <label for="txtLegajo">Número de Legajo</label>
-                    <input type="number" id="txtLegajo" name="legajo" placeholder="Ej: 12345">
-                </div>
-                
-                <!-- Filtros Solicitados: DNI y CUIL (existentes) -->
-                <div class="form-group">
-                    <label for="txtDNI">DNI</label>
-                    <input type="text" id="txtDNI" name="dni" placeholder="Ej: 30123456">
-                </div>
-                
-                <div class="form-group">
-                    <label for="txtCUIL">CUIL</label>
-                    <input type="text" id="txtCUIL" name="cuil" placeholder="Ej: 20-30123456-7">
-                </div>
-                <!-- Fin de Filtros Solicitados -->
+        <!-- Botón para Mostrar/Ocultar Filtros -->
+        <div style="margin-top: 20px; text-align: center;">
+            <button onclick="toggleFiltros()">
+                <span id="textoBotonFiltros">➕ Mostrar Filtros Avanzados</span>
+            </button>
+        </div>
+    </div>
 
-                <!-- Campos existentes -->
-                <div class="form-group">
-                    <label for="txtNombreApellido">Nombre y Apellido</label>
-                    <input type="text" id="txtNombreApellido" name="nombre_y_apellido" placeholder="Ej: Juan Pérez">
+    <!-- 2. PANEL DE FILTROS AVANZADOS (Ahora incluye los botones de acción) -->
+    <div id="filtrosAvanzados" class="panel-contenido" style="margin-top: 20px; display: none;">
+        <h3>Filtros Adicionales</h3>
+        <form id="formFiltros">
+            <div class="grid-2-cols">
+                <!-- 2.1. Periodo -->
+                <div class="input-group">
+                    <label for="slcPeriodo">Período Fiscal:</label>
+                    <select id="slcPeriodo">
+                        <option value="">(Todos)</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
                 </div>
-                
-                <div class="form-group">
-                    <label for="txtCategoria">Categoría</label>
-                    <input type="text" id="txtCategoria" name="categoria" placeholder="Ej: Desarrollador">
+                <!-- 2.2. Tipo Documento -->
+                <div class="input-group">
+                    <label for="slcTipoDoc">Tipo de Documento:</label>
+                    <select id="slcTipoDoc">
+                        <option value="">(Todos)</option>
+                        <option value="NOMINA">Nómina</option>
+                        <option value="CONTRATO">Contrato</option>
+                        <option value="ANEXO">Anexo</option>
+                    </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="txtObservaciones">Observaciones</label>
-                    <input type="text" id="txtObservaciones" name="observaciones" placeholder="Ej: Vacaciones">
-                </div>
-                
-                <div class="form-group">
-                    <label for="txtAnio">Año</label>
-                    <input type="number" id="txtAnio" name="anio" placeholder="Ej: 2024">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtPeriodoMes">Período </label>
-                    <input type="text" id="txtPeriodoMes" name="periodo" placeholder="Ej: Noviembre">
-                </div>
-
-                <div class="form-group">
-                    <label for="selDocumentoFirmado">Documento Firmado</label>
-                    <select id="selDocumentoFirmado" name="firmado">
-                        <option value="">Cualquiera</option>
+                <!-- 2.3. Estado Firmado -->
+                <div class="input-group">
+                    <label for="slcFirmado">Estado Firmado:</label>
+                    <select id="slcFirmado">
+                        <option value="">(Todos)</option>
                         <option value="Si">Si</option>
                         <option value="No">No</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="selConformidad">Conformidad</label>
-                    <select id="selConformidad" name="conformidad">
-                        <option value="">Cualquiera</option>
-                        <option value="Conforme">Conforme </option>
-                        <option value="Disconforme">Disconforme</option>
+                <!-- 2.4. Conformidad -->
+                <div class="input-group">
+                    <label for="slcConformidad">Estado Conformidad:</label>
+                    <select id="slcConformidad">
+                        <option value="">(Todos)</option>
+                        <option value="Conforme">Conforme</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="No Conforme">No Conforme</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="txtEmail">Email</label>
-                    <input type="email" id="txtEmail" name="mail" placeholder="Ej: juan@empresa.com">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtCelular">Nº Celular</label>
-                    <input type="text" id="txtCelular" name="numero_celular" placeholder="Ej: 11-5555-1234">
-                </div>
             </div>
-        </div>
-    </form>
 
-
-    <!-- Mensaje de Estado / Carga / Error -->
-    <div id="panelEstado" class="status-msg">
-        <p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>
-        <p>Utilice el botón "Filtros Avanzados" para ver todas las opciones.</p>
+            <!-- 2.5. BOTONES DE ACCIÓN (BUSCAR y LIMPIAR) - Implementación de la solicitud -->
+            <div class="button-group-left">
+                <!-- Botón BUSCAR (texto 'Buscar' solicitado) -->
+                <button id="btnBuscar" type="button" onclick="buscarDatos(event)">
+                    <span style="font-size: 1.2em;">🔍 Buscar</span>
+                </button>
+                <!-- Nuevo Botón LIMPIAR (mismo estilo de fondo) -->
+                <button id="btnLimpiar" type="button" onclick="limpiarCampos()">
+                    <span style="font-size: 1.2em;">🧹 Limpiar</span>
+                </button>
+            </div>
+        </form>
     </div>
 
-    <!-- Tabla de Resultados -->
-    <table id="tablaResultados" class="hidden">
-        <thead>
-            <tr>
-                <!-- Orden Solicitado -->
-                <th>Nº Reg.</th>
-                <th>Clase Documental</th>
-                <th>Título del Documento</th>
-                <th>Legajo</th>
-                <th>Nombre y Apellido</th>
-                <th>Contacto </th>
-                <th>Categoría</th>
-                <th>Período </th>
-                <th>Firmado</th>
-                <th>Conformidad</th>
-                <th>Observaciones</th>
-            </tr>
-        </thead>
-        <tbody id="cuerpoTabla">
-            <!-- Datos inyectados por Javascript -->
-        </tbody>
-    </table>
+    <!-- 3. PANEL DE ESTADO Y RESULTADOS -->
+    <div class="panel-contenido">
+        <div id="panelEstado">
+            <p style="color: var(--primary);">Ingrese un RUC y use el botón 'Buscar'.</p>
+        </div>
+
+        <table id="tablaResultados" class="hidden">
+            <thead>
+                <tr>
+                    <th>RUC</th>
+                    <th>Razón Social</th>
+                    <th>Doc. ID</th>
+                    <th>Tipo Doc.</th>
+                    <th>Emisión</th>
+                    <th>Vence</th>
+                    <th>Monto</th>
+                    <th>Periodo</th>
+                    <th>Firmado</th>
+                    <th>Conformidad</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Los resultados de la búsqueda se insertarán aquí -->
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <script>
-    const API_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
+    // URL de la API (simulada)
+    // NOTA: Esta URL debe ser reemplazada por su endpoint real en un entorno de producción.
+    const API_URL_BASE = 'https://jsonplaceholder.typicode.com/todos';
 
-    function getDisplayValue(value, placeholder = '-') {
-        // Convierte a string, elimina espacios y verifica si está vacío.
-        const stringValue = String(value || '').trim();
-        return stringValue === '' || stringValue === 'null' || stringValue === 'undefined' ? placeholder : stringValue;
-    }
-    
+    // --- FUNCIONES DE UTILIDAD ---
+
     /**
-     * Determina si el valor original está vacío/nulo, lo que resulta en un guion ('-').
-     * @param {string | number | null | undefined} value 
-     * @returns {boolean}
+     * Función para obtener el valor a mostrar. Si es nulo o vacío, muestra un valor por defecto.
+     * @param {string} valor - El valor original.
+     * @param {string} defaultValue - El valor por defecto a mostrar.
+     * @returns {string} El valor procesado.
      */
-    function isDashValue(value) {
-        const stringValue = String(value || '').trim();
-        return stringValue === '' || stringValue === 'null' || stringValue === 'undefined';
+    function getDisplayValue(valor, defaultValue) {
+        return (valor === null || valor === undefined || valor.trim() === '') ? defaultValue : valor;
     }
 
+    /**
+     * Función que genera la etiqueta HTML con el estilo condicional (tag).
+     * @param {string} valor - El valor del estado ('Si', 'No', 'Conforme', etc.).
+     * @returns {string} La etiqueta HTML con el color y el texto.
+     */
+    function generarEtiqueta(valor) {
+        let clase = 'tag-gris';
+        let texto = valor;
+        let icono = '';
+
+        if (valor === 'Si') {
+            clase = 'tag-verde';
+            icono = '✅';
+        } else if (valor === 'No') {
+            clase = 'tag-rojo';
+            icono = '❌';
+        } else if (valor === 'Conforme') {
+            clase = 'tag-celeste';
+            icono = '👍';
+        } else if (valor === 'No Conforme') {
+            clase = 'tag-rojo';
+            icono = '👎';
+        } else if (valor === 'Pendiente') {
+            clase = 'tag-amarillo';
+            icono = '⏳';
+        }
+
+        return `<span class="tag ${clase}">${icono} ${texto}</span>`;
+    }
+
+    // --- FUNCIÓN DE CONTROL DE FILTROS ---
 
     /**
-     * Alterna la visibilidad del panel de filtros avanzados.
+     * Muestra u oculta el panel de filtros avanzados.
      */
     function toggleFiltros() {
         const filtrosDiv = document.getElementById('filtrosAvanzados');
-        const btnFiltros = document.getElementById('btnFiltros');
-        
-        const isHidden = filtrosDiv.style.display === 'none';
+        const botonTexto = document.getElementById('textoBotonFiltros');
 
-        if (isHidden) {
-            filtrosDiv.style.display = 'block'; 
-            btnFiltros.textContent = 'Filtros Avanzados (Ocultar)';
-            btnFiltros.classList.remove('secondary');
-            console.log("Filtros Avanzados: VISIBLES (display: block)"); 
+        if (filtrosDiv.style.display === 'none') {
+            filtrosDiv.style.display = 'block';
+            botonTexto.innerHTML = '➖ Ocultar Filtros Avanzados';
         } else {
-            filtrosDiv.style.display = 'none'; 
-            btnFiltros.textContent = 'Filtros Avanzados (Mostrar)';
-            btnFiltros.classList.add('secondary');
-            console.log("Filtros Avanzados: OCULTOS (display: none)");
+            filtrosDiv.style.display = 'none';
+            botonTexto.innerHTML = '➕ Mostrar Filtros Avanzados';
         }
     }
 
+    // --- FUNCIÓN NUEVA: LIMPIAR CAMPOS ---
+
     /**
-     * Recoge TODOS los datos del formulario (Legajo + Filtros opcionales).
+     * Limpia el campo RUC y restablece todos los filtros avanzados.
      */
-    function obtenerParametrosBusqueda() {
-        const params = {};
-        const form = document.getElementById('searchForm');
+    function limpiarCampos() {
+        // 1. Limpiar el RUC principal
+        document.getElementById('txtRUC').value = '';
+
+        // 2. Obtener el formulario de filtros avanzados
+        const formFiltros = document.getElementById('formFiltros');
+        if (formFiltros) {
+            // Itera sobre todos los elementos dentro del formulario
+            const elementos = formFiltros.querySelectorAll('input, select');
+            elementos.forEach(elemento => {
+                if (elemento.tagName === 'SELECT') {
+                    // Para SELECT, restablecer a la primera opción (Todos)
+                    elemento.selectedIndex = 0;
+                } else if (elemento.type === 'text' || elemento.type === 'number') {
+                    // Para inputs de texto/número, limpiar el valor
+                    elemento.value = '';
+                }
+            });
+        }
+
+        // 3. Limpiar la tabla de resultados
+        document.getElementById('cuerpoTabla').innerHTML = '';
         
-        // Iterar sobre todos los elementos de input y select dentro del formulario que tienen 'name'
-        const allInputs = form.querySelectorAll('input[name], select[name]');
-        
-        allInputs.forEach(input => {
-            const name = input.name;
-            const value = input.value.trim(); 
-            
-            // Incluir el parámetro en el objeto, sin importar si el valor es vacío.
-            params[name] = value;
-        });
-        
-        return params;
+        // 4. Ocultar la tabla y mostrar el estado de "listo para buscar"
+        const tabla = document.getElementById('tablaResultados');
+        const panelEstado = document.getElementById('panelEstado');
+        tabla.classList.add('hidden');
+        panelEstado.classList.remove('hidden');
+        panelEstado.innerHTML = `<p style="color: var(--primary);">🧹 Campos Limpiados. Ingrese un RUC y use el botón 'Buscar'.</p>`;
     }
 
-    /**
-     * Inicia el proceso de consulta a la API.
-     */
-    async function consultarLegajo(event) {
-        event.preventDefault(); // Previene el envío por defecto del formulario
 
-        const params = obtenerParametrosBusqueda();
-        
-        const panelEstado = document.getElementById('panelEstado');
+    // --- FUNCIÓN PRINCIPAL DE BÚSQUEDA DE DATOS ---
+
+    /**
+     * Inicia el proceso de búsqueda filtrando los datos.
+     * @param {Event} event - El evento (puede ser submit del form o click del botón).
+     */
+    async function buscarDatos(event) {
+        event.preventDefault(); // Evita la recarga de la página si es un evento de formulario
+
+        const ruc = document.getElementById('txtRUC').value.trim();
+        const slcPeriodo = document.getElementById('slcPeriodo').value;
+        const slcTipoDoc = document.getElementById('slcTipoDoc').value;
+        const slcFirmado = document.getElementById('slcFirmado').value;
+        const slcConformidad = document.getElementById('slcConformidad').value;
+
         const tabla = document.getElementById('tablaResultados');
         const cuerpoTabla = document.getElementById('cuerpoTabla');
+        const panelEstado = document.getElementById('panelEstado');
         
-        // Estado de la respuesta (para diagnóstico)
-        let respuesta = null; 
-
-        // Verificar si se ha ingresado AL MENOS un criterio de búsqueda
-        const hasFilters = Object.values(params).some(value => value.length > 0);
-
-        if (!hasFilters) {
-            panelEstado.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Debe ingresar al menos un criterio de búsqueda (ej: Legajo, DNI, etc.) y presione Buscar.</p>`;
+        // 1. Validación de RUC (Mínima)
+        if (!ruc) {
             panelEstado.classList.remove('hidden');
             tabla.classList.add('hidden');
+            panelEstado.innerHTML = '<p style="color: var(--color-rojo);">⚠️ Por favor, ingrese un RUC válido para iniciar la búsqueda.</p>';
             return;
         }
 
-        // 1. UI: Mostrar estado de carga
-        tabla.classList.add('hidden'); 
-        panelEstado.innerHTML = '<div class="loader"></div><p>Consultando...</p>';
+        // 2. Mostrar estado de carga
         panelEstado.classList.remove('hidden');
-
-        // Construir la URL con parámetros de consulta
-        const query = new URLSearchParams(params).toString();
-        const urlConFiltros = `${API_URL}?${query}`;
+        tabla.classList.add('hidden');
+        cuerpoTabla.innerHTML = '';
+        panelEstado.innerHTML = '<p style="color: var(--primary);">⏳ Buscando documentos, por favor espere...</p>';
         
-        console.log("URL de la consulta COMPLETA a la API:", urlConFiltros); 
-
+        // 3. Simulación de Fetch
         try {
-            // 2. CONEXIÓN AL BACKEND PROXY (Webhook)
-            respuesta = await fetch(urlConFiltros);
-
-            if (!respuesta.ok) {
-                // Intenta parsear el JSON de error si está disponible
-                let errorDetail = `Respuesta no exitosa (${respuesta.status} ${respuesta.statusText}).`;
-                try {
-                    const errorData = await respuesta.json(); 
-                    errorDetail = errorData.details || errorData.error || errorDetail;
-                } catch (e) {
-                    // Ignorar error de parseo si no es JSON
-                }
-                throw new Error(`El Webhook devolvió un error HTTP. Detalle: ${errorDetail}`);
+            // Utilizamos un ID (el RUC) para simular la búsqueda en la API.
+            // En un caso real, el RUC y los filtros irían en el body (POST) o query params (GET).
+            const response = await fetch(`${API_URL_BASE}/${ruc}`); 
+            
+            if (!response.ok) {
+                 // Si la respuesta HTTP no es 2xx, simulamos un error de no encontrado
+                 throw new Error(`Error HTTP: ${response.status}. No se encontraron resultados para el RUC.`);
             }
 
-            const documentos = await respuesta.json();
-            cuerpoTabla.innerHTML = ''; // Limpiar filas
+            // Simulación de datos complejos (ya que la API real devuelve un solo objeto 'todo')
+            // Generaremos 5 documentos simulados
+            const datosApi = await response.json();
+            const documentosSimulados = [];
 
-            // 3. Rellenar la grilla
-            if (!Array.isArray(documentos) || documentos.length === 0) {
+            // Generador de datos simulados
+            const tiposDoc = ['NOMINA', 'CONTRATO', 'ANEXO'];
+            const estadosFirmado = ['Si', 'No'];
+            const estadosConformidad = ['Conforme', 'Pendiente', 'No Conforme'];
+            const montos = [1200.50, 4500.00, 800.25, 15000.00, 950.99];
+
+            for (let i = 1; i <= 5; i++) {
+                const doc = {
+                    ruc: ruc,
+                    razonSocial: `Empresa S.A. ${ruc}`,
+                    docId: `${ruc}-${i}`,
+                    tipoDoc: tiposDoc[i % tiposDoc.length],
+                    fechaEmision: `2024-${String(i+1).padStart(2, '0')}-01`,
+                    fechaVencimiento: `2024-${String(i+1).padStart(2, '0')}-30`,
+                    monto: montos[i % montos.length],
+                    periodo: 2024,
+                    firmado: estadosFirmado[i % 2],
+                    conformidad: estadosConformidad[i % estadosConformidad.length],
+                    observaciones: i === 3 ? 'Ajuste pendiente' : ''
+                };
+                documentosSimulados.push(doc);
+            }
+
+            // 4. Filtrar los documentos con base en los selectores avanzados
+            const resultadosFiltrados = documentosSimulados.filter(doc => {
+                let pasaFiltro = true;
+
+                // Filtro Periodo
+                if (slcPeriodo && doc.periodo != slcPeriodo) {
+                    pasaFiltro = false;
+                }
+                // Filtro Tipo Documento
+                if (slcTipoDoc && doc.tipoDoc !== slcTipoDoc) {
+                    pasaFiltro = false;
+                }
+                // Filtro Firmado
+                if (slcFirmado && doc.firmado !== slcFirmado) {
+                    pasaFiltro = false;
+                }
+                // Filtro Conformidad
+                if (slcConformidad && doc.conformidad !== slcConformidad) {
+                    pasaFiltro = false;
+                }
+
+                return pasaFiltro;
+            });
+
+            // 5. Mostrar resultados
+            if (resultadosFiltrados.length === 0) {
+                panelEstado.classList.remove('hidden');
+                tabla.classList.add('hidden');
                 panelEstado.innerHTML = `
-                    <p>⚠️ No se encontraron documentos con los filtros aplicados.</p>
-                    <p>Intente simplificar los criterios de búsqueda.</p>
+                    <p style="color: var(--color-rojo);">❌ No se encontraron documentos con los filtros seleccionados para el RUC: ${ruc}</p>
+                    <p style="color: var(--color-gris);">Intente limpiar los filtros o verificar el RUC.</p>
                 `;
             } else {
-                
-                documentos.forEach((doc, index) => {
+                resultadosFiltrados.forEach(doc => {
+                    // Formato de Monto (simulado, asumiendo moneda local)
+                    const montoFormateado = doc.monto.toLocaleString('es-PE', { style: 'currency', currency: 'PEN' });
                     
-                    // *****************************************************************
-                    // Lógica para 'Firmado'
-                    // *****************************************************************
-                    const rawFirmado = getDisplayValue(doc.firmado);
-                    let firmadoTag;
+                    // Periodo con formato M-AAAA
+                    const periodoCompleto = `${new Date(doc.fechaEmision).getMonth() + 1}-${doc.periodo}`;
 
-                    if (rawFirmado === '-') {
-                        // Si es "-", se deja como texto simple
-                        firmadoTag = rawFirmado;
-                    } else {
-                        const normalizedFirmado = rawFirmado.toUpperCase();
-                        let firmadoClass = 'firmado-neutro';
-
-                        if (normalizedFirmado === 'SI' || normalizedFirmado === '1' || normalizedFirmado === 'TRUE') {
-                            firmadoClass = 'firmado-si'; // VERDE
-                        } else if (normalizedFirmado === 'NO' || normalizedFirmado === '0' || normalizedFirmado === 'FALSE') {
-                            firmadoClass = 'firmado-no'; // ROJO
-                        }
-
-                        firmadoTag = `<span class="badge ${firmadoClass}">${rawFirmado}</span>`;
-                    }
-                    // *****************************************************************
-                    
-                    
-                    
-                    // *****************************************************************
-                    // Lógica para 'Conformidad'
-                    // *****************************************************************
-                    const rawConformidad = getDisplayValue(doc.conformidad); // Esto es '-' si es null/empty
-                    let conformidadTag;
-
-                    if (rawConformidad === '-') {
-                        // Si es el guion, debe ser SIN COLOR (sin badge)
-                        conformidadTag = rawConformidad;
-                    } else {
-                        // Si tiene valor, aplicar la lógica de colores
-                        const normalizedConformidad = rawConformidad.toUpperCase();
-                        let conformidadClass;
-
-                        if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
-                            conformidadClass = 'conformidad-ok'; // CELESTE
-                        } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
-                            conformidadClass = 'conformidad-disconforme'; // ROJO
-                        } else {
-                            conformidadClass = 'conformidad-pendiente'; // AMARILLO
-                        }
-                        conformidadTag = `<span class="badge ${conformidadClass}">${rawConformidad}</span>`;
-                    }
-                    // *****************************************************************
-                    
-                    const periodoCompleto = `${getDisplayValue(doc.periodo, 'N/A')} - ${getDisplayValue(doc.anio, 'N/A')}`;
+                    // Etiquetas condicionales
+                    const firmadoTag = generarEtiqueta(doc.firmado);
+                    const conformidadTag = generarEtiqueta(doc.conformidad);
 
                     const fila = `
                         <tr>
-                            <!-- 1. Número de registro -->
-                            <td>${index + 1}</td>
-                            <!-- 2. Clase documental -->
-                            <td>${getDisplayValue(doc.object_definition_name, 'N/A')}</td>
-                            <!-- 3. Título del Documento -->
-                            <td>${getDisplayValue(doc.object_title, 'N/A')}</td>
-                            <!-- 4. Legajo -->
-                            <td>${getDisplayValue(doc.legajo)}</td>
-                            <!-- 5. Nombre y Apellido (Incluye DNI/CUIL para conservar la info) -->
-                            <td>
-                                <strong>${getDisplayValue(doc.nombre_y_apellido)}</strong>
-                                <span class="contact-info">DNI: ${getDisplayValue(doc.dni, 'N/A')} | CUIL: ${getDisplayValue(doc.cuil, 'N/A')}</span>
-                            </td>
-                            <!-- 6. Contacto -->
-                            <td>
-                                Mail: ${getDisplayValue(doc.mail, 'N/A')}
-                                <span class="contact-info">Tel: ${getDisplayValue(doc.numero_celular, 'N/A')}</span>
-                            </td>
-                            <!-- 7. Categoría -->
-                            <td>${getDisplayValue(doc.categoria)}</td>
-                            <!-- 8. Período -->
+                            <td>${doc.ruc}</td>
+                            <td>${doc.razonSocial}</td>
+                            <td>${doc.docId}</td>
+                            <td>${doc.tipoDoc}</td>
+                            <td>${doc.fechaEmision}</td>
+                            <td>${doc.fechaVencimiento}</td>
+                            <td>${montoFormateado}</td>
                             <td>${periodoCompleto}</td>
-                            <!-- 9. Firmado -->
                             <td>${firmadoTag}</td>
-                            <!-- 10. Conformidad -->
                             <td>${conformidadTag}</td>
-                            <!-- 11. Observaciones -->
                             <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>
                         </tr>
                     `;
@@ -595,7 +559,7 @@
             console.error("Error en el proceso (Verifique CSP):", error);
             
             let mensajeErrorHTML = `
-                <p style="color: red;">❌Sin Resultados</p>`;
+                <p style="color: red;">❌ Sin Resultados</p>`;
             
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
