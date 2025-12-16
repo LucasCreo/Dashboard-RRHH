@@ -624,8 +624,7 @@
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ Sin resultados (Error de conexión o configuración CORS/CSP)</p>
-                `
+                    <p style="color: red;">❌ Sin resultados (Error de conexión o configuración CORS/CSP)</p>`
             }
 
             panelEstado.innerHTML = mensajeErrorHTML;
