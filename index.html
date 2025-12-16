@@ -4,24 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard RRHH - Búsqueda Documental</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
     <style>
-        /* --- ESTILOS CSS (Diseño Centrado y Simple) --- */
+        /* --- ESTILOS CSS --- */
         :root {
             --primary: #007bff;
             --bg: #f4f6f9;
             --card-bg: #ffffff;
             --border: #dee2e6;
             --text-main: #343a40;
-            /* Nuevos colores condicionales */
-            --color-celeste: #29b6f6; /* Celeste/Sky Blue para Conformidad OK */
-            --color-verde: #28a745; /* Verde para Firmado SI */
-            --color-rojo: #dc3545; /* Rojo para No Conforme / Firmado NO */
-            --color-amarillo: #ffc107; /* Amarillo para Pendiente */
-            --color-gris: #6c757d; /* Gris para Neutro */
+            --color-celeste: #29b6f6; 
+            --color-verde: #28a745; 
+            --color-rojo: #dc3545; 
+            --color-amarillo: #ffc107; 
+            --color-gris: #6c757d; 
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* 2. APLICACIÓN DE LA TIPOGRAFÍA */
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            
             background-color: var(--bg);
             padding: 10px 15px;
             display: flex;
@@ -31,6 +38,7 @@
             color: var(--text-main);
         }
 
+        /* Se mantiene el resto del diseño intacto como solicitaste */
         .container {
             width: 100%;
             max-width: 1400px; 
@@ -41,29 +49,30 @@
             overflow: visible; 
         }
 
-        h2 { 
+        h3 { 
             color: var(--primary); 
             border-bottom: 2px solid var(--primary); 
             padding-bottom: 10px; 
             margin-bottom: 25px; 
             font-size: 1.8rem;
+            font-weight: 500; /* Peso típico de Roboto en encabezados */
         }
         
-        /* Contenedor de Botón de Toggle */
         .search-area { 
             display: flex; 
             gap: 15px; 
-            margin-bottom: 15px; /* Reducido, ya que la caja de filtros es la principal */
+            margin-bottom: 15px;
             align-items: flex-end;
-            padding: 0 15px; /* Ajuste para mantener alineación */
-            justify-content: flex-end; /* Alinear el botón de toggle a la derecha */
+            padding: 0 15px;
+            justify-content: flex-end;
         }
 
         .form-group { flex: 1; min-width: 200px; }
         .form-group.full-width { flex: 100%; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
 
         input, select { 
+            font-family: 'Roboto', sans-serif; /* Asegurar fuente en inputs */
             width: 100%; 
             padding: 10px; 
             font-size: 1rem; 
@@ -75,6 +84,7 @@
         input:focus, select:focus { outline: none; border-color: var(--primary); }
 
         button { 
+            font-family: 'Roboto', sans-serif; /* Asegurar fuente en botones */
             padding: 10px 20px; 
             background: var(--primary); 
             color: white; 
@@ -82,7 +92,7 @@
             border-radius: 5px; 
             cursor: pointer; 
             font-size: 1rem; 
-            font-weight: 600;
+            font-weight: 500;
             transition: background 0.2s;
             height: 42px; 
         }
@@ -634,5 +644,6 @@
 
 </body>
 </html>
+
 
 
