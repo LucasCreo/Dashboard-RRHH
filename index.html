@@ -51,7 +51,7 @@
 
         h3 { 
             color: var(--primary); 
-            border-bottom: 2px solid var(--primary); 
+            border-bottom: none; 
             padding-bottom: 10px; 
             margin-bottom: 25px; 
             font-size: 1.8rem;
@@ -201,7 +201,7 @@
         #tablaResultados thead tr th:nth-child(4), 
         #tablaResultados tbody tr td:nth-child(4) { width: 5%; } /* Legajo */
         #tablaResultados thead tr th:nth-child(5), 
-        #tablaResultados tbody tr td:nth-child(5) { width: 16%; } /* Nombre y Apellido + DNI/CUIL - Reducido 18%->17% */
+        #tablaResultados tbody tr td:nth-child(5) { width: 17%; } /* Nombre y Apellido + DNI/CUIL - Reducido 18%->17% */
         #tablaResultados thead tr th:nth-child(6), 
         #tablaResultados tbody tr td:nth-child(6) { width: 13%; } /* Contacto - Reducido 15%->13% */
         #tablaResultados thead tr th:nth-child(7), 
@@ -213,7 +213,7 @@
         #tablaResultados thead tr th:nth-child(10), 
         #tablaResultados tbody tr td:nth-child(10) { width: 6%; } /* Conformidad - Reducido 10%->9% */
         #tablaResultados thead tr th:nth-child(11), 
-        #tablaResultados tbody tr td:nth-child(11) { width: 11%; } /* Observaciones - Aumentado 10%->11% */
+        #tablaResultados tbody tr td:nth-child(11) { width: 1%; } /* Observaciones - Aumentado 10%->11% */
         #tablaResultados thead tr th:nth-child(12), 
         /* Suma de anchos: 4+10+12+5+17+13+7+6+6+9+11+7 = 100% */
 
@@ -281,7 +281,7 @@
 <body>
 
 <div class="container">
-    <h2> Información de Legajos</h2>
+    <h3> Información de Legajos</h3>
     
     <form id="searchForm">
         <div class="search-area">
@@ -339,8 +339,8 @@
                     <label for="selDocumentoFirmado">Documento Firmado</label>
                     <select id="selDocumentoFirmado" name="firmado">
                         <option value="">Cualquiera</option>
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
                     </select>
                 </div>
 
@@ -348,8 +348,8 @@
                     <label for="selConformidad">Conformidad</label>
                     <select id="selConformidad" name="conformidad">
                         <option value="">Cualquiera</option>
-                        <option value="1">Conforme </option>
-                        <option value="0">Disconforme</option>
+                        <option value="Conforme">Conforme </option>
+                        <option value="Disconforme">Disconforme</option>
                     </select>
                 </div>
 
@@ -644,6 +644,3 @@
 
 </body>
 </html>
-
-
-
