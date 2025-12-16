@@ -46,8 +46,10 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: visible; 
-        }
+            /* Cambiamos visible por hidden para contener la tabla */
+            overflow: hidden; 
+            box-sizing: border-box;
+                }
 
         h3 { 
             color: var(--primary); 
@@ -122,7 +124,6 @@
             background-color: #0056b3;
         }
 
-
         /* Contenedor de Filtros Avanzados */
         #filtrosAvanzados {
             /* display: none; */ /* Se manejará en JS */
@@ -162,19 +163,21 @@
         
         /* Contenedor de la tabla para manejar el scroll horizontal */
         .table-wrapper {
-            min-width: 100%; 
-            overflow-x: auto; 
-            padding-top: 10px; 
-        }
+            width: 100%; 
+            overflow-x: auto; /* El scroll solo sucede aquí adentro */
+            margin-top: 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            }
         
         /* Estilos de Tabla y otros (mantenidos sin cambios) */
         table { 
-            min-width: 1400px; /* AUMENTADO: 1300px -> 1400px para la nueva columna */
+            /* Eliminamos el min-width de 1400px para que no empuje el contenedor */
             width: 100%; 
             border-collapse: collapse; 
-            font-size: 0.9rem;
-            table-layout: fixed; 
-        }
+            font-size: 0.85rem;
+            table-layout: auto; /* Permite que las columnas se ajusten al contenido */
+            }
         
         th, td { 
             text-align: left; 
