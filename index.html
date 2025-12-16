@@ -99,6 +99,19 @@
             background: #c82333;
         }
         button:hover { background: #0056b3; }
+        
+        /* Nuevo estilo para el botón de acción "Ver" */
+        button.action-btn {
+            padding: 5px 10px;
+            height: auto;
+            font-size: 0.85rem;
+            background-color: var(--primary);
+            min-width: 80px;
+        }
+        button.action-btn:hover {
+            background-color: #0056b3;
+        }
+
 
         /* Contenedor de Filtros Avanzados */
         #filtrosAvanzados {
@@ -146,7 +159,7 @@
         
         /* Estilos de Tabla y otros (mantenidos sin cambios) */
         table { 
-            min-width: 1300px; 
+            min-width: 1400px; /* AUMENTADO: 1300px -> 1400px para la nueva columna */
             width: 100%; 
             border-collapse: collapse; 
             font-size: 0.9rem;
@@ -168,29 +181,32 @@
             position: static; 
         }
         
-        /* Definición de Anchos Específicos para Columnas (mantenidos sin cambios) */
+        /* Definición de Anchos Específicos para Columnas */
         #tablaResultados thead tr th:nth-child(1), 
         #tablaResultados tbody tr td:nth-child(1) { width: 4%; } /* Nº Reg. */
         #tablaResultados thead tr th:nth-child(2), 
-        #tablaResultados tbody tr td:nth-child(2) { width: 12%; } /* Clase Documental */
+        #tablaResultados tbody tr td:nth-child(2) { width: 10%; } /* Clase Documental - Reducido 12%->10% */
         #tablaResultados thead tr th:nth-child(3), 
-        #tablaResultados tbody tr td:nth-child(3) { width: 15%; } /* Título */
+        #tablaResultados tbody tr td:nth-child(3) { width: 12%; } /* Título - Reducido 15%->12% */
         #tablaResultados thead tr th:nth-child(4), 
         #tablaResultados tbody tr td:nth-child(4) { width: 5%; } /* Legajo */
         #tablaResultados thead tr th:nth-child(5), 
-        #tablaResultados tbody tr td:nth-child(5) { width: 18%; } /* Nombre y Apellido + DNI/CUIL */
+        #tablaResultados tbody tr td:nth-child(5) { width: 17%; } /* Nombre y Apellido + DNI/CUIL - Reducido 18%->17% */
         #tablaResultados thead tr th:nth-child(6), 
-        #tablaResultados tbody tr td:nth-child(6) { width: 15%; } /* Contacto */
+        #tablaResultados tbody tr td:nth-child(6) { width: 13%; } /* Contacto - Reducido 15%->13% */
         #tablaResultados thead tr th:nth-child(7), 
-        #tablaResultados tbody tr td:nth-child(7) { width: 8%; } /* Categoría */
+        #tablaResultados tbody tr td:nth-child(7) { width: 7%; } /* Categoría - Reducido 8%->7% */
         #tablaResultados thead tr th:nth-child(8), 
         #tablaResultados tbody tr td:nth-child(8) { width: 6%; } /* Período */
         #tablaResultados thead tr th:nth-child(9), 
-        #tablaResultados tbody tr td:nth-child(9) { width: 7%; } /* Firmado */
+        #tablaResultados tbody tr td:nth-child(9) { width: 6%; } /* Firmado - Reducido 7%->6% */
         #tablaResultados thead tr th:nth-child(10), 
-        #tablaResultados tbody tr td:nth-child(10) { width: 10%; } /* Conformidad */
+        #tablaResultados tbody tr td:nth-child(10) { width: 9%; } /* Conformidad - Reducido 10%->9% */
         #tablaResultados thead tr th:nth-child(11), 
-        #tablaResultados tbody tr td:nth-child(11) { width: 10%; } /* Observaciones */
+        #tablaResultados tbody tr td:nth-child(11) { width: 11%; } /* Observaciones - Aumentado 10%->11% */
+        #tablaResultados thead tr th:nth-child(12), 
+        /* Suma de anchos: 4+10+12+5+17+13+7+6+6+9+11+7 = 100% */
+
 
         tr:hover { background-color: #f7f7f7; }
 
@@ -255,7 +271,7 @@
 <body>
 
 <div class="container">
-    <h2> Búsqueda Documental</h2>
+    <h2> Información de Legajos</h2>
     
     <form id="searchForm">
         <div class="search-area">
@@ -366,7 +382,6 @@
                     <th>Firmado</th>
                     <th>Conformidad</th>
                     <th>Observaciones</th>
-                </tr>
             </thead>
             <tbody id="cuerpoTabla">
                 </tbody>
@@ -375,8 +390,8 @@
 </div>
 
 <script>
-    const API_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
-
+    // URL para la consulta inicial de búsqueda de documentos
+    const API_SEARCH_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
     function getDisplayValue(value, placeholder = '-') {
         // Convierte a string, elimina espacios y verifica si está vacío.
         const stringValue = String(value || '').trim();
@@ -479,7 +494,7 @@
 
         // Construir la URL con parámetros de consulta
         const query = new URLSearchParams(params).toString();
-        const urlConFiltros = `${API_URL}?${query}`;
+        const urlConFiltros = `${API_SEARCH_URL}?${query}`;
         
         console.log("URL de la consulta COMPLETA a la API:", urlConFiltros); 
 
@@ -581,9 +596,7 @@
                             <td>${periodoCompleto}</td>
                             <td>${firmadoTag}</td>
                             <td>${conformidadTag}</td>
-                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>
-                        </tr>
-                    `;
+                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>`;
                     cuerpoTabla.innerHTML += fila;
                 });
 
@@ -596,32 +609,28 @@
             console.error("Error en el proceso (Verifique CSP):", error);
             
             let mensajeErrorHTML = `
-                <p style="color: red;">❌Sin Resultados</p>`;
+                <p style="color: red;">❌ Error al consultar la búsqueda.</p>`;
             
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ Sin resultados</p>
+                    <p style="color: red;">❌ Sin resultados (Error de conexión o configuración CORS/CSP)</p>
                 `
             }
 
             panelEstado.innerHTML = mensajeErrorHTML;
         }
     }
-    
-    // Inicialización: Asegurar que los filtros estén inicialmente ocultos y el botón tenga el texto correcto
     document.addEventListener('DOMContentLoaded', () => {
+        // Inicialización forzada para mostrar filtros
         const filtrosDiv = document.getElementById('filtrosAvanzados');
         const btnFiltros = document.getElementById('btnFiltros');
         
-        filtrosDiv.style.display = 'none'; 
-        btnFiltros.textContent = 'Filtros (Mostrar)';
-        btnFiltros.classList.add('secondary');
-        
-        document.querySelector('h2').textContent = '🔎 Búsqueda Documental';
+        filtrosDiv.style.display = 'block'; 
+        btnFiltros.textContent = 'Filtros (Ocultar)';
+        btnFiltros.classList.add('primary');
     });
 </script>
 
 </body>
 </html>
-
