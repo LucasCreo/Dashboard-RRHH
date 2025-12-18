@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
     <style>
         /* --- ESTILOS CSS --- */
@@ -49,14 +51,14 @@
             /* Cambiamos visible por hidden para contener la tabla */
             overflow: hidden; 
             box-sizing: border-box;
-                }
+        }
 
         h3 { 
             color: var(--primary); 
-            border-bottom: none; 
-            padding-bottom: 10px; 
-            margin-bottom: 25px; 
-            font-size: 1.8rem;
+            border-bottom: 2px solid var (--primary); 
+            padding-bottom: 8px; 
+            margin-bottom: 20px; 
+            font-size: 1.4rem;
             font-weight: 500; /* Peso típico de Roboto en encabezados */
         }
         
@@ -71,13 +73,13 @@
 
         .form-group { flex: 1; min-width: 200px; }
         .form-group.full-width { flex: 100%; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.85rem; }
 
         input, select { 
             font-family: 'Roboto', sans-serif; /* Asegurar fuente en inputs */
             width: 100%; 
-            padding: 10px; 
-            font-size: 1rem; 
+            padding: 8px; 
+            font-size: 0.85rem; 
             border: 1px solid var(--border); 
             border-radius: 5px; 
             box-sizing: border-box;
@@ -87,16 +89,16 @@
 
         button { 
             font-family: 'Roboto', sans-serif; /* Asegurar fuente en botones */
-            padding: 10px 20px; 
+            padding: 8px 16px; 
             background: var(--primary); 
             color: white; 
             border: none; 
             border-radius: 5px; 
             cursor: pointer; 
-            font-size: 1rem; 
+            font-size: 0.85rem; 
             font-weight: 500;
             transition: background 0.2s;
-            height: 42px; 
+            height: 36px; 
         }
         button.secondary {
             background: #6c757d;
@@ -168,7 +170,7 @@
             margin-top: 10px;
             border: 1px solid var(--border);
             border-radius: 5px;
-            }
+        }
         
         /* Estilos de Tabla y otros (mantenidos sin cambios) */
         table { 
@@ -177,7 +179,7 @@
             border-collapse: collapse; 
             font-size: 0.85rem;
             table-layout: auto; /* Permite que las columnas se ajusten al contenido */
-            }
+        }
         
         th, td { 
             text-align: left; 
@@ -195,18 +197,17 @@
         }
         
         /* Definición de Anchos Específicos para Columnas */
-    #tablaResultados thead tr th:nth-child(1) { width: 40px; }  /* Nº Reg */
-    #tablaResultados thead tr th:nth-child(2) { width: 120px; } /* Clase Doc */
-    #tablaResultados thead tr th:nth-child(3) { width: 180px; } /* Título */
-    #tablaResultados thead tr th:nth-child(4) { width: 70px; }  /* Legajo */
-    #tablaResultados thead tr th:nth-child(5) { width: 220px; } /* Nombre */
-    #tablaResultados thead tr th:nth-child(6) { width: 180px; } /* Contacto */
-    #tablaResultados thead tr th:nth-child(7) { width: 120px; } /* Categoría */
-    #tablaResultados thead tr th:nth-child(8) { width: 100px; } /* Período */
-    #tablaResultados thead tr th:nth-child(9) { width: 90px; }  /* Firmado */
-    #tablaResultados thead tr th:nth-child(10) { width: 110px; }/* Conformidad */
-    #tablaResultados thead tr th:nth-child(11) { width: 150px; }/* Observaciones (YA NO SE CORTA) */
-
+        #tablaResultados thead tr th:nth-child(1) { width: 40px; }  /* Nº Reg */
+        #tablaResultados thead tr th:nth-child(2) { width: 120px; } /* Clase Doc */
+        #tablaResultados thead tr th:nth-child(3) { width: 180px; } /* Título */
+        #tablaResultados thead tr th:nth-child(4) { width: 70px; }  /* Legajo */
+        #tablaResultados thead tr th:nth-child(5) { width: 220px; } /* Nombre */
+        #tablaResultados thead tr th:nth-child(6) { width: 180px; } /* Contacto */
+        #tablaResultados thead tr th:nth-child(7) { width: 120px; } /* Categoría */
+        #tablaResultados thead tr th:nth-child(8) { width: 100px; } /* Período */
+        #tablaResultados thead tr th:nth-child(9) { width: 90px; }  /* Firmado */
+        #tablaResultados thead tr th:nth-child(10) { width: 110px; }/* Conformidad */
+        #tablaResultados thead tr th:nth-child(11) { width: 150px; }/* Observaciones (YA NO SE CORTA) */
 
         tr:hover { background-color: #f7f7f7; }
 
@@ -254,6 +255,56 @@
             color: #6c757d;
         }
         
+        /* --- ESTILOS PARA GRÁFICOS --- */
+        .charts-container {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .charts-container h4 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            justify-items: center;
+        }
+
+        .chart-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* Media Queries para responsividad */
         @media (max-width: 768px) {
             body { padding: 20px; }
@@ -265,13 +316,22 @@
             .filtros-grid-buttons button { width: 100%; min-width: auto; }
 
             .search-area { justify-content: center; }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .chart-box {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h3> Información de Legajos</h3>
+    <h3>Información de Legajos</h3>
     
     <form id="searchForm">
         <div class="search-area">
@@ -321,7 +381,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="txtPeriodoMes">Período </label>
+                    <label for="txtPeriodoMes">Período</label>
                     <input type="text" id="txtPeriodoMes" name="periodo" placeholder="Ej: Noviembre">
                 </div>
 
@@ -338,7 +398,7 @@
                     <label for="selConformidad">Conformidad</label>
                     <select id="selConformidad" name="conformidad">
                         <option value="">Cualquiera</option>
-                        <option value="Conforme">Conforme </option>
+                        <option value="Conforme">Conforme</option>
                         <option value="Disconforme">Disconforme</option>
                     </select>
                 </div>
@@ -376,22 +436,43 @@
                     <th>Título del Documento</th>
                     <th>Legajo</th>
                     <th>Nombre y Apellido</th>
-                    <th>Contacto </th>
+                    <th>Contacto</th>
                     <th>Categoría</th>
-                    <th>Período </th>
+                    <th>Período</th>
                     <th>Firmado</th>
                     <th>Conformidad</th>
                     <th>Observaciones</th>
+                </tr>
             </thead>
             <tbody id="cuerpoTabla">
-                </tbody>
+            </tbody>
         </table>
+    </div>
+
+    <!-- Sección de Gráficos -->
+    <div id="chartsContainer" class="charts-container hidden">
+        <h4>Estadísticas de los Resultados</h4>
+        <div class="charts-grid">
+            <div class="chart-box">
+                <div class="chart-title">Distribución por Estado de Firma</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartFirmado"></canvas>
+                </div>
+            </div>
+            <div class="chart-box">
+                <div class="chart-title">Distribución por Conformidad</div>
+                <div class="chart-wrapper">
+                    <canvas id="chartConformidad"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
     // URL para la consulta inicial de búsqueda de documentos
     const API_SEARCH_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa'; 
+    
     function getDisplayValue(value, placeholder = '-') {
         // Convierte a string, elimina espacios y verifica si está vacío.
         const stringValue = String(value || '').trim();
@@ -431,6 +512,7 @@
         // También limpiar la tabla de resultados y mostrar mensaje inicial
         document.getElementById('cuerpoTabla').innerHTML = '';
         document.getElementById('tablaResultados').classList.add('hidden');
+        document.getElementById('chartsContainer').classList.add('hidden');
         document.getElementById('panelEstado').classList.remove('hidden');
         document.getElementById('panelEstado').innerHTML = `
             <p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>
@@ -523,8 +605,13 @@
                     <p>⚠️ No se encontraron documentos con los filtros aplicados.</p>
                     <p>Intente simplificar los criterios de búsqueda.</p>
                 `;
+                document.getElementById('chartsContainer').classList.add('hidden');
             } else {
                 
+                // Crear los gráficos con los documentos
+                crearGraficoFirmado(documentos);
+                crearGraficoConformidad(documentos);
+
                 documentos.forEach((doc, index) => {
                     
                     // *****************************************************************
@@ -596,13 +683,16 @@
                             <td>${periodoCompleto}</td>
                             <td>${firmadoTag}</td>
                             <td>${conformidadTag}</td>
-                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>`;
+                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>
+                        </tr>
+                    `;
                     cuerpoTabla.innerHTML += fila;
                 });
 
-                // Mostrar la tabla y ocultar el mensaje de estado
+                // Mostrar la tabla y gráficos, ocultar el mensaje de estado
                 panelEstado.classList.add('hidden');
                 tabla.classList.remove('hidden');
+                document.getElementById('chartsContainer').classList.remove('hidden');
             }
 
         } catch (error) {
@@ -614,12 +704,198 @@
             // Diagnóstico específico para el error "Failed to fetch" (el que indica bloqueo de red/CSP)
             if (String(error).includes('TypeError: Failed to fetch') || String(error).includes('NetworkError')) {
                 mensajeErrorHTML = `
-                    <p style="color: red;">❌ Sin resultados (Error de conexión o configuración CORS/CSP)</p>`
+                    <p style="color: red;">❌ Sin resultados (Error de conexión o configuración CORS/CSP)</p>
+                `
             }
 
             panelEstado.innerHTML = mensajeErrorHTML;
         }
     }
+    
+    // Variables globales para las instancias de Chart
+    let chartFirmadoInstance = null;
+    let chartConformidadInstance = null;
+
+    /**
+     * Calcula las estadísticas de Firmado basadas en los documentos
+     */
+    function calcularEstadisticasFirmado(documentos) {
+        const stats = {
+            'Si': 0,
+            'No': 0,
+            'Pendiente': 0
+        };
+
+        documentos.forEach(doc => {
+            const rawFirmado = getDisplayValue(doc.firmado);
+            if (rawFirmado === '-') {
+                stats['Pendiente']++;
+            } else {
+                const normalizedFirmado = rawFirmado.toUpperCase();
+                if (normalizedFirmado === 'SI' || normalizedFirmado === '1' || normalizedFirmado === 'TRUE') {
+                    stats['Si']++;
+                } else if (normalizedFirmado === 'NO' || normalizedFirmado === '0' || normalizedFirmado === 'FALSE') {
+                    stats['No']++;
+                } else {
+                    stats['Pendiente']++;
+                }
+            }
+        });
+
+        return stats;
+    }
+
+    /**
+     * Calcula las estadísticas de Conformidad basadas en los documentos
+     */
+    function calcularEstadisticasConformidad(documentos) {
+        const stats = {
+            'Conforme': 0,
+            'Disconforme': 0,
+            'Pendiente': 0
+        };
+
+        documentos.forEach(doc => {
+            const rawConformidad = getDisplayValue(doc.conformidad);
+            if (rawConformidad === '-') {
+                stats['Pendiente']++;
+            } else {
+                const normalizedConformidad = rawConformidad.toUpperCase();
+                if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
+                    stats['Conforme']++;
+                } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
+                    stats['Disconforme']++;
+                } else {
+                    stats['Pendiente']++;
+                }
+            }
+        });
+
+        return stats;
+    }
+
+    /**
+     * Crea o actualiza el gráfico circular de Firmado
+     */
+    function crearGraficoFirmado(documentos) {
+        const stats = calcularEstadisticasFirmado(documentos);
+        const ctx = document.getElementById('chartFirmado').getContext('2d');
+
+        // Destruir el gráfico anterior si existe
+        if (chartFirmadoInstance) {
+            chartFirmadoInstance.destroy();
+        }
+
+        const colores = ['#28a745', '#dc3545', '#6c757d']; // Verde, Rojo, Gris
+        const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+        chartFirmadoInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats),
+                datasets: [{
+                    data: Object.values(stats),
+                    backgroundColor: colores,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        color: '#ffffff',
+                        font: { weight: 'bold', size: 20, family: 'Roboto, sans-serif' },
+                        formatter: (value) => {
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${percentage}%`;
+                        },
+                        textShadow: '0 2px 4px rgba(0,0,0,0.6)'
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 12, family: 'Roboto, sans-serif' },
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Crea o actualiza el gráfico circular de Conformidad
+     */
+    function crearGraficoConformidad(documentos) {
+        const stats = calcularEstadisticasConformidad(documentos);
+        const ctx = document.getElementById('chartConformidad').getContext('2d');
+
+        // Destruir el gráfico anterior si existe
+        if (chartConformidadInstance) {
+            chartConformidadInstance.destroy();
+        }
+
+        const colores = ['#29b6f6', '#dc3545', '#6c757d']; // Celeste, Rojo, Gris
+        const total = Object.values(stats).reduce((a, b) => a + b, 0);
+
+        chartConformidadInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats),
+                datasets: [{
+                    data: Object.values(stats),
+                    backgroundColor: colores,
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        color: '#ffffff',
+                        font: { weight: 'bold', size: 20, family: 'Roboto, sans-serif' },
+                        formatter: (value) => {
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${percentage}%`;
+                        },
+                        textShadow: '0 2px 4px rgba(0,0,0,0.6)'
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 12, family: 'Roboto, sans-serif' },
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         // Inicialización forzada para mostrar filtros
         const filtrosDiv = document.getElementById('filtrosAvanzados');
