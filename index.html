@@ -243,8 +243,7 @@
 
         /* --- CLASES DE COLOR ACTUALIZADAS (mantenidas sin cambios) --- */
         .badge.conformidad-ok { background-color: var(--color-celeste); color: white; } 
-        .badge.conformidad-disconforme { background-color: var(--color-rojo); color: white; } 
-        .badge.conformidad-pendiente { background-color: var(--color-amarillo); color: var(--text-main); } 
+        .badge.conformidad-disconforme { background-color: var(--color-amarillo); color: white; } 
         .badge.firmado-si { background-color: var(--color-verde); color: white; }
         .badge.firmado-no { background-color: var(--color-rojo); color: white; }
         .badge.firmado-neutro { background-color: var(--color-gris); color: white; }
@@ -452,6 +451,9 @@
     <!-- Sección de Gráficos -->
     <div id="chartsContainer" class="charts-container hidden">
         <h4>Estadísticas de los Resultados</h4>
+        <p style="font-size: 0.9rem; color: #6c757d; margin-bottom: 15px; font-style: italic;">
+            ℹ️ Los siguientes gráficos se basan en <span id="chartDocCount">0</span> documento(s) de "Recibos de Sueldo" o "Recibo Firmado" de los <span id="chartTotalCount">0</span> resultado(s) total(es)
+        </p>
         <div class="charts-grid">
             <div class="chart-box">
                 <div class="chart-title">Distribución por Estado de Firma</div>
@@ -545,6 +547,51 @@
     }
 
     /**
+     * Ordena los documentos priorizando "legajos" al principio
+     */
+    function priorizarLegajos(documentos) {
+        if (!Array.isArray(documentos) || documentos.length === 0) {
+            return documentos;
+        }
+
+        const legajos = [];
+        const otros = [];
+
+        documentos.forEach(doc => {
+            try {
+                const clase = (doc.object_definition_name || '').toString().toUpperCase();
+                if (clase.includes('LEGAJO')) {
+                    legajos.push(doc);
+                } else {
+                    otros.push(doc);
+                }
+            } catch (e) {
+                otros.push(doc);
+            }
+        });
+
+        return [...legajos, ...otros];
+    }
+
+    /**
+     * Filtra documentos por clases documentales específicas (para los gráficos)
+     */
+    function filtrarDocumentosParaGraficos(documentos) {
+        if (!Array.isArray(documentos) || documentos.length === 0) {
+            return documentos;
+        }
+
+        return documentos.filter(doc => {
+            try {
+                const clase = (doc.object_definition_name || '').toString().toUpperCase();
+                return clase.includes('RECIBO') || clase.includes('RECIBOS_DE_SUELDO') || clase.includes('RECIBO_FIRMADO');
+            } catch (e) {
+                return false;
+            }
+        });
+    }
+
+    /**
      * Inicia el proceso de consulta a la API.
      */
     async function consultarLegajo(event) {
@@ -608,11 +655,20 @@
                 document.getElementById('chartsContainer').classList.add('hidden');
             } else {
                 
-                // Crear los gráficos con los documentos
-                crearGraficoFirmado(documentos);
-                crearGraficoConformidad(documentos);
+                // Priorizar legajos al principio
+                const documentosOrdenados = priorizarLegajos(documentos);
 
-                documentos.forEach((doc, index) => {
+                // Crear los gráficos solo con recibos de sueldo
+                const documentosParaGraficos = filtrarDocumentosParaGraficos(documentos);
+                
+                // Actualizar contadores en los gráficos
+                document.getElementById('chartDocCount').textContent = documentosParaGraficos.length;
+                document.getElementById('chartTotalCount').textContent = documentos.length;
+                
+                crearGraficoFirmado(documentosParaGraficos);
+                crearGraficoConformidad(documentosParaGraficos);
+
+                documentosOrdenados.forEach((doc, index) => {
                     
                     // *****************************************************************
                     // Lógica para 'Firmado'
@@ -652,12 +708,10 @@
                         const normalizedConformidad = rawConformidad.toUpperCase();
                         let conformidadClass;
 
-                        if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
+                        if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
+                            conformidadClass = 'conformidad-disconforme'; // AMARILLO
+                        } else if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
                             conformidadClass = 'conformidad-ok'; // CELESTE
-                        } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
-                            conformidadClass = 'conformidad-disconforme'; // ROJO
-                        } else {
-                            conformidadClass = 'conformidad-pendiente'; // AMARILLO
                         }
                         conformidadTag = `<span class="badge ${conformidadClass}">${rawConformidad}</span>`;
                     }
@@ -761,10 +815,10 @@
                 stats['Pendiente']++;
             } else {
                 const normalizedConformidad = rawConformidad.toUpperCase();
-                if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
-                    stats['Conforme']++;
-                } else if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
+                if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
                     stats['Disconforme']++;
+                } else if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
+                    stats['Conforme']++;
                 } else {
                     stats['Pendiente']++;
                 }
@@ -847,7 +901,7 @@
             chartConformidadInstance.destroy();
         }
 
-        const colores = ['#29b6f6', '#dc3545', '#6c757d']; // Celeste, Rojo, Gris
+        const colores = ['#29b6f6', '#ffc107', '#6c757d']; // Celeste, Amarillo, Gris
         const total = Object.values(stats).reduce((a, b) => a + b, 0);
 
         chartConformidadInstance = new Chart(ctx, {
