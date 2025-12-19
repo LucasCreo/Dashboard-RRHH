@@ -90,6 +90,12 @@
             transition: background 0.2s;
             height: 36px; 
         }
+        button.primary {
+            background: var(--primary);
+        }
+        button.primary:hover {
+            background: #0056b3;
+        }
         button.secondary {
             background: #6c757d;
         }
@@ -304,19 +310,19 @@
     
     <div id="chartsGlobales" class="charts-container hidden">
         <div class="chart-box">
-            <h4>Año (Global)</h4>
+            <h4>Años</h4>
             <canvas id="chartAnioGlobal"></canvas>
         </div>
         <div class="chart-box">
-            <h4>Período (Global)</h4>
+            <h4>Períodos</h4>
             <canvas id="chartPeriodoGlobal"></canvas>
         </div>
         <div class="chart-box">
-            <h4>Firmado (Global)</h4>
+            <h4>Recibos Firmados</h4>
             <canvas id="chartFirmadoGlobal"></canvas>
         </div>
         <div class="chart-box">
-            <h4>Conformidad (Global)</h4>
+            <h4>Conformidad</h4>
             <canvas id="chartConformidadGlobal"></canvas>
         </div>
     </div>
@@ -327,14 +333,14 @@
                 <label for="txtLegajo">Número de Legajo</label>
                 <input type="number" id="txtLegajo" name="legajo" placeholder="Ej: 12345">
             </div>
-            <button type="button" id="btnFiltros" class="secondary" onclick="toggleFiltros()">
-                Filtros (Mostrar)
+            <button type="submit" onclick="consultarLegajo(event)">Buscar</button>
+            <button type="button" id="btnFiltros" class="primary" onclick="toggleFiltros()">
+                Filtros
             </button>
+            <button type="button" class="danger" onclick="limpiarFiltros()">Limpiar</button>
         </div>
 
         <div id="filtrosAvanzados" style="display: none;">
-            <h3 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 15px;">Criterios de Búsqueda</h3>
-            
             <div class="filtros-grid">
                 
                 <div class="form-group">
@@ -355,11 +361,6 @@
                 <div class="form-group">
                     <label for="txtCategoria">Categoría</label>
                     <input type="text" id="txtCategoria" name="categoria" placeholder="Ej: Desarrollador">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtObservaciones">Observaciones</label>
-                    <input type="text" id="txtObservaciones" name="observaciones" placeholder="Ej: Vacaciones">
                 </div>
                 
                 <div class="form-group">
@@ -389,21 +390,6 @@
                         <option value="Disconforme">Disconforme</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="txtEmail">Email</label>
-                    <input type="email" id="txtEmail" name="mail" placeholder="Ej: juan@empresa.com">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtCelular">Nº Celular</label>
-                    <input type="text" id="txtCelular" name="numero_celular" placeholder="Ej: 11-5555-1234">
-                </div>
-            </div>
-            
-            <div class="filtros-grid-buttons">
-                <button type="submit" onclick="consultarLegajo(event)">Buscar</button>
-                <button type="button" class="danger" onclick="limpiarFiltros()">Limpiar</button>
             </div>
         </div>
     </form>
@@ -690,14 +676,14 @@
         if (isHidden) {
             filtrosDiv.style.display = 'block'; 
             btnFiltros.textContent = 'Filtros (Ocultar)';
-            btnFiltros.classList.add('primary');
-            btnFiltros.classList.remove('secondary');
+            btnFiltros.classList.add('secondary');
+            btnFiltros.classList.remove('primary');
             console.log("Filtros: VISIBLES"); 
         } else {
             filtrosDiv.style.display = 'none'; 
             btnFiltros.textContent = 'Filtros (Mostrar)';
-            btnFiltros.classList.add('secondary');
-            btnFiltros.classList.remove('primary');
+            btnFiltros.classList.add('primary');
+            btnFiltros.classList.remove('secondary');
             console.log("Filtros: OCULTOS");
         }
     }
@@ -713,7 +699,7 @@
             <p>Utilice el botón "Filtros (Mostrar)" para ver todas las opciones.</p>
         `;
 
-        console.log("Filtros Limpiados.");
+        console.log("Filtros y resultados limpiados.");
     }
 
     function obtenerParametrosBusqueda() {
