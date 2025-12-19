@@ -132,31 +132,67 @@
         .charts-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 25px;
             margin-bottom: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
         .chart-box {
             background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
+            border-top: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .chart-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .chart-box:hover::before {
+            opacity: 1;
+        }
+        .chart-box:nth-child(1)::before {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        .chart-box:nth-child(2)::before {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        .chart-box:nth-child(3)::before {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .chart-box:nth-child(4)::before {
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
         }
         .chart-box h4 {
-            margin: 0 0 10px 0;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            font-weight: 600;
+            margin: 0 0 15px 0;
+            font-size: 0.95rem;
+            color: #2d3748;
+            font-weight: 700;
             text-align: center;
+            letter-spacing: 0.3px;
         }
         .chart-box canvas {
-            max-width: 180px !important;
-            max-height: 180px !important;
+            max-width: 250px !important;
+            max-height: 250px !important;
             height: auto !important;
         }
 
@@ -437,34 +473,56 @@
     }
     
     function crearGraficoAnioGlobal(data) {
-        const ctx = document.getElementById('chartAnioGlobal').getContext('2d');
+        const canvas = document.getElementById('chartAnioGlobal');
+        const ctx = canvas.getContext('2d');
+        
+        // Mejorar resolución para zoom
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
+        
         if (chartAnioGlobalInstance) chartAnioGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
         const values = data.map(item => item.value);
-        const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6c757d'];
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140'];
         
         chartAnioGlobalInstance = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: colors.slice(0, labels.length)
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                devicePixelRatio: dpr,
                 plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            boxWidth: 14, 
+                            font: { size: 11, weight: '500' },
+                            padding: 12,
+                            color: '#2d3748'
+                        } 
+                    },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 11 },
+                        font: { weight: 'bold', size: 13 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return percentage + '%';
+                            const percentage = ((value / total) * 100);
+                            // Ocultar etiquetas menores al 8%
+                            if (percentage < 8) return '';
+                            return percentage.toFixed(1) + '%';
                         }
                     }
                 }
@@ -474,34 +532,56 @@
     }
     
     function crearGraficoPeriodoGlobal(data) {
-        const ctx = document.getElementById('chartPeriodoGlobal').getContext('2d');
+        const canvas = document.getElementById('chartPeriodoGlobal');
+        const ctx = canvas.getContext('2d');
+        
+        // Mejorar resolución para zoom
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
+        
         if (chartPeriodoGlobalInstance) chartPeriodoGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
         const values = data.map(item => item.value);
-        const colors = ['#17a2b8', '#007bff', '#28a745', '#ffc107', '#dc3545', '#6c757d', '#e83e8c', '#fd7e14', '#20c997', '#6610f2', '#6f42c1', '#e91e63'];
+        const colors = ['#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140', '#30cfd0', '#330867', '#a8edea', '#fed6e3'];
         
         chartPeriodoGlobalInstance = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: colors.slice(0, labels.length)
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                devicePixelRatio: dpr,
                 plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            boxWidth: 14, 
+                            font: { size: 11, weight: '500' },
+                            padding: 12,
+                            color: '#2d3748'
+                        } 
+                    },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 11 },
+                        font: { weight: 'bold', size: 13 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return percentage + '%';
+                            const percentage = ((value / total) * 100);
+                            // Ocultar etiquetas menores al 8%
+                            if (percentage < 8) return '';
+                            return percentage.toFixed(1) + '%';
                         }
                     }
                 }
@@ -511,35 +591,57 @@
     }
     
     function crearGraficoFirmadoGlobal(data) {
-        const ctx = document.getElementById('chartFirmadoGlobal').getContext('2d');
+        const canvas = document.getElementById('chartFirmadoGlobal');
+        const ctx = canvas.getContext('2d');
+        
+        // Mejorar resolución para zoom
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
+        
         if (chartFirmadoGlobalInstance) chartFirmadoGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
         const values = data.filter(item => item.value > 0).map(item => item.value);
-        const colorMap = { 'Si': '#28a745', 'No': '#dc3545', 'Pendiente': '#6c757d' };
-        const colors = labels.map(label => colorMap[label] || '#6c757d');
+        const colorMap = { 'Si': '#43e97b', 'No': '#fa709a', 'Pendiente': '#a8b8d8', 'Sin dato': '#cbd5e0' };
+        const colors = labels.map(label => colorMap[label] || '#a8b8d8');
         
         chartFirmadoGlobalInstance = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: colors
+                    backgroundColor: colors,
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                devicePixelRatio: dpr,
                 plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            boxWidth: 14, 
+                            font: { size: 11, weight: '500' },
+                            padding: 12,
+                            color: '#2d3748'
+                        } 
+                    },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 11 },
+                        font: { weight: 'bold', size: 13 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return percentage + '%';
+                            const percentage = ((value / total) * 100);
+                            // Ocultar etiquetas menores al 8%
+                            if (percentage < 8) return '';
+                            return percentage.toFixed(1) + '%';
                         }
                     }
                 }
@@ -549,35 +651,57 @@
     }
     
     function crearGraficoConformidadGlobal(data) {
-        const ctx = document.getElementById('chartConformidadGlobal').getContext('2d');
+        const canvas = document.getElementById('chartConformidadGlobal');
+        const ctx = canvas.getContext('2d');
+        
+        // Mejorar resolución para zoom
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * dpr;
+        canvas.height = canvas.offsetHeight * dpr;
+        ctx.scale(dpr, dpr);
+        
         if (chartConformidadGlobalInstance) chartConformidadGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
         const values = data.filter(item => item.value > 0).map(item => item.value);
-        const colorMap = { 'Conforme': '#29b6f6', 'Disconforme': '#ffc107', 'Pendiente': '#6c757d' };
-        const colors = labels.map(label => colorMap[label] || '#6c757d');
+        const colorMap = { 'Conforme': '#4facfe', 'Disconforme': '#fee140', 'Pendiente': '#a8b8d8' };
+        const colors = labels.map(label => colorMap[label] || '#a8b8d8');
         
         chartConformidadGlobalInstance = new Chart(ctx, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: colors
+                    backgroundColor: colors,
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                devicePixelRatio: dpr,
                 plugins: {
-                    legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                    legend: { 
+                        position: 'bottom', 
+                        labels: { 
+                            boxWidth: 14, 
+                            font: { size: 11, weight: '500' },
+                            padding: 12,
+                            color: '#2d3748'
+                        } 
+                    },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 11 },
+                        font: { weight: 'bold', size: 13 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return percentage + '%';
+                            const percentage = ((value / total) * 100);
+                            // Ocultar etiquetas menores al 8%
+                            if (percentage < 8) return '';
+                            return percentage.toFixed(1) + '%';
                         }
                     }
                 }
@@ -605,7 +729,7 @@
             const conformidades = [];
             
             const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const estadosFirmado = ['Si', 'No', 'Sin dato'];
+            const estadosFirmado = ['Si', 'No', 'Sin dato', 'Pendiente'];
             const estadosConformidad = ['Conforme', 'Disconforme'];
             
             data.forEach(item => {
@@ -619,22 +743,13 @@
                 else if (meses.includes(label)) {
                     periodos.push(item);
                 }
-                // Detectar estados de firmado
+                // Detectar estados de firmado (incluye Pendiente)
                 else if (estadosFirmado.includes(label)) {
                     firmados.push(item);
                 }
                 // Detectar conformidad
                 else if (estadosConformidad.includes(label)) {
                     conformidades.push(item);
-                }
-                // Pendiente puede ser tanto firmado como conformidad
-                else if (label === 'Pendiente') {
-                    // Si ya hay datos de conformidad, es probable que este sea de firmado
-                    if (conformidades.length > 0) {
-                        firmados.push(item);
-                    } else {
-                        conformidades.push(item);
-                    }
                 }
             });
             
