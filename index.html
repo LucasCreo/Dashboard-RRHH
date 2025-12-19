@@ -159,7 +159,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            background: var(--dynamic-gradient, linear-gradient(90deg, #667eea 0%, #764ba2 100%));
             opacity: 0;
             transition: opacity 0.3s ease;
         }
@@ -169,18 +169,6 @@
         }
         .chart-box:hover::before {
             opacity: 1;
-        }
-        .chart-box:nth-child(1)::before {
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        }
-        .chart-box:nth-child(2)::before {
-            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
-        }
-        .chart-box:nth-child(3)::before {
-            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-        }
-        .chart-box:nth-child(4)::before {
-            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
         }
         .chart-box h4 {
             margin: 0 0 15px 0;
@@ -480,6 +468,17 @@
         const values = data.map(item => item.value);
         const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140'];
         
+        // Crear array de datos con colores y ordenar por valor descendente
+        const dataWithColors = data.map((item, index) => ({
+            value: item.value,
+            color: colors[index % colors.length]
+        })).sort((a, b) => b.value - a.value);
+        
+        // Crear gradiente dinámico basado en predominancia
+        const gradientColors = dataWithColors.map(item => item.color).join(', ');
+        const chartBox = document.getElementById('chartAnioGlobal').closest('.chart-box');
+        chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
+        
         chartAnioGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -527,6 +526,17 @@
         const labels = data.map(item => item.label);
         const values = data.map(item => item.value);
         const colors = ['#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140', '#30cfd0', '#330867', '#a8edea', '#fed6e3'];
+        
+        // Crear array de datos con colores y ordenar por valor descendente
+        const dataWithColors = data.map((item, index) => ({
+            value: item.value,
+            color: colors[index % colors.length]
+        })).sort((a, b) => b.value - a.value);
+        
+        // Crear gradiente dinámico basado en predominancia
+        const gradientColors = dataWithColors.map(item => item.color).join(', ');
+        const chartBox = document.getElementById('chartPeriodoGlobal').closest('.chart-box');
+        chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
         chartPeriodoGlobalInstance = new Chart(ctx, {
             type: 'pie',
@@ -577,6 +587,17 @@
         const colorMap = { 'Si': '#43e97b', 'No': '#fa709a', 'Pendiente': '#a8b8d8', 'Sin dato': '#cbd5e0' };
         const colors = labels.map(label => colorMap[label] || '#a8b8d8');
         
+        // Crear array de datos con colores y ordenar por valor descendente
+        const dataWithColors = data.filter(item => item.value > 0).map(item => ({
+            value: item.value,
+            color: colorMap[item.label] || '#a8b8d8'
+        })).sort((a, b) => b.value - a.value);
+        
+        // Crear gradiente dinámico basado en predominancia
+        const gradientColors = dataWithColors.map(item => item.color).join(', ');
+        const chartBox = document.getElementById('chartFirmadoGlobal').closest('.chart-box');
+        chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
+        
         chartFirmadoGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -625,6 +646,17 @@
         const values = data.filter(item => item.value > 0).map(item => item.value);
         const colorMap = { 'Conforme': '#4facfe', 'Disconforme': '#fee140', 'Pendiente': '#a8b8d8' };
         const colors = labels.map(label => colorMap[label] || '#a8b8d8');
+        
+        // Crear array de datos con colores y ordenar por valor descendente
+        const dataWithColors = data.filter(item => item.value > 0).map(item => ({
+            value: item.value,
+            color: colorMap[item.label] || '#a8b8d8'
+        })).sort((a, b) => b.value - a.value);
+        
+        // Crear gradiente dinámico basado en predominancia
+        const gradientColors = dataWithColors.map(item => item.color).join(', ');
+        const chartBox = document.getElementById('chartConformidadGlobal').closest('.chart-box');
+        chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
         chartConformidadGlobalInstance = new Chart(ctx, {
             type: 'pie',
