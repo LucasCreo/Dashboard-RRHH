@@ -191,8 +191,8 @@
             letter-spacing: 0.3px;
         }
         .chart-box canvas {
-            max-width: 250px !important;
-            max-height: 250px !important;
+            max-width: 200px !important;
+            max-height: 200px !important;
             height: auto !important;
         }
 
@@ -473,15 +473,7 @@
     }
     
     function crearGraficoAnioGlobal(data) {
-        const canvas = document.getElementById('chartAnioGlobal');
-        const ctx = canvas.getContext('2d');
-        
-        // Mejorar resolución para zoom
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.scale(dpr, dpr);
-        
+        const ctx = document.getElementById('chartAnioGlobal').getContext('2d');
         if (chartAnioGlobalInstance) chartAnioGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
@@ -503,7 +495,6 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                devicePixelRatio: dpr,
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -516,13 +507,11 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 13 },
+                        font: { weight: 'bold', size: 12 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100);
-                            // Ocultar etiquetas menores al 8%
-                            if (percentage < 8) return '';
-                            return percentage.toFixed(1) + '%';
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return percentage + '%';
                         }
                     }
                 }
@@ -532,15 +521,7 @@
     }
     
     function crearGraficoPeriodoGlobal(data) {
-        const canvas = document.getElementById('chartPeriodoGlobal');
-        const ctx = canvas.getContext('2d');
-        
-        // Mejorar resolución para zoom
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.scale(dpr, dpr);
-        
+        const ctx = document.getElementById('chartPeriodoGlobal').getContext('2d');
         if (chartPeriodoGlobalInstance) chartPeriodoGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
@@ -562,7 +543,6 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                devicePixelRatio: dpr,
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -575,13 +555,11 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 13 },
+                        font: { weight: 'bold', size: 12 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100);
-                            // Ocultar etiquetas menores al 8%
-                            if (percentage < 8) return '';
-                            return percentage.toFixed(1) + '%';
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return percentage + '%';
                         }
                     }
                 }
@@ -591,15 +569,7 @@
     }
     
     function crearGraficoFirmadoGlobal(data) {
-        const canvas = document.getElementById('chartFirmadoGlobal');
-        const ctx = canvas.getContext('2d');
-        
-        // Mejorar resolución para zoom
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.scale(dpr, dpr);
-        
+        const ctx = document.getElementById('chartFirmadoGlobal').getContext('2d');
         if (chartFirmadoGlobalInstance) chartFirmadoGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
@@ -622,7 +592,6 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                devicePixelRatio: dpr,
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -635,13 +604,11 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 13 },
+                        font: { weight: 'bold', size: 12 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100);
-                            // Ocultar etiquetas menores al 8%
-                            if (percentage < 8) return '';
-                            return percentage.toFixed(1) + '%';
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return percentage + '%';
                         }
                     }
                 }
@@ -651,15 +618,7 @@
     }
     
     function crearGraficoConformidadGlobal(data) {
-        const canvas = document.getElementById('chartConformidadGlobal');
-        const ctx = canvas.getContext('2d');
-        
-        // Mejorar resolución para zoom
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * dpr;
-        canvas.height = canvas.offsetHeight * dpr;
-        ctx.scale(dpr, dpr);
-        
+        const ctx = document.getElementById('chartConformidadGlobal').getContext('2d');
         if (chartConformidadGlobalInstance) chartConformidadGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
@@ -682,7 +641,6 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
-                devicePixelRatio: dpr,
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -695,13 +653,11 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 13 },
+                        font: { weight: 'bold', size: 12 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100);
-                            // Ocultar etiquetas menores al 8%
-                            if (percentage < 8) return '';
-                            return percentage.toFixed(1) + '%';
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return percentage + '%';
                         }
                     }
                 }
