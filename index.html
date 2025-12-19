@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard RRHH - Búsqueda Documental v2</title>
+    <title>Dashboard RRHH - Gráficos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -26,7 +26,6 @@
         }
 
         body {
-            /* 2. APLICACIÓN DE LA TIPOGRAFÍA */
             font-family: 'Roboto', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -40,7 +39,6 @@
             color: var(--text-main);
         }
 
-        /* Se mantiene el resto del diseño intacto como solicitaste */
         .container {
             width: 100%;
             max-width: 1400px; 
@@ -59,73 +57,6 @@
             margin-bottom: 20px; 
             font-size: 1.4rem;
             font-weight: 500;
-        }
-
-        .form-group { flex: 1; min-width: 200px; }
-        .form-group.full-width { flex: 100%; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.85rem; }
-
-        input, select { 
-            font-family: 'Roboto', sans-serif;
-            width: 100%; 
-            padding: 8px; 
-            font-size: 0.85rem; 
-            border: 1px solid var(--border); 
-            border-radius: 5px; 
-            box-sizing: border-box;
-            background-color: white;
-        }
-        input:focus, select:focus { outline: none; border-color: var(--primary); }
-
-        button { 
-            font-family: 'Roboto', sans-serif;
-            padding: 8px 16px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 0.85rem; 
-            font-weight: 500;
-            transition: background 0.2s;
-            height: 36px; 
-        }
-        button.primary {
-            background: var(--primary);
-        }
-        button.primary:hover {
-            background: #0056b3;
-        }
-        button.secondary {
-            background: #6c757d;
-        }
-        button.secondary:hover {
-            background: #5a6268;
-        }
-        button.danger {
-            background: #dc3545;
-        }
-        button.danger:hover {
-            background: #c82333;
-        }
-        button:hover { background: #0056b3; }
-
-        .search-area {
-            display: flex;
-            align-items: flex-end;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: var(--text-main);
         }
 
         /* Contenedor de Gráficos */
@@ -184,86 +115,34 @@
             height: auto !important;
         }
 
-        /* Contenedor de Filtros Avanzados */
-        #filtrosAvanzados {
-            padding: 20px 15px;
-            margin-bottom: 30px; 
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            animation: fadeIn 0.3s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .filtros-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .filtros-grid-buttons {
+        .kpi-card {
             display: flex;
-            gap: 15px;
-            justify-content: flex-start; 
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed var(--border);
+            gap: 10px;
+            min-height: 200px;
         }
-        .filtros-grid-buttons button {
-            flex-grow: 0;
-            min-width: 150px;
+        .kpi-value {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
         }
-        
-        /* Contenedor de la tabla para manejar el scroll horizontal */
-        .table-wrapper {
-            width: 100%; 
-            overflow-x: auto;
-            margin-top: 10px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-        }
-        
-        /* Estilos de Tabla */
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 0.85rem;
-            table-layout: auto;
-        }
-        
-        th, td { 
-            text-align: left; 
-            padding: 10px 12px; 
-            border-bottom: 1px solid var(--border); 
-            white-space: nowrap;
+        .kpi-label {
             font-size: 0.9rem;
-            overflow: hidden; 
-            text-overflow: ellipsis; 
+            color: #6c757d;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        th { 
-            background-color: #e9ecef; 
-            color: var(--text-main); 
-            position: static; 
-        }
-        
-        /* Definición de Anchos Específicos para Columnas */
-        #tablaResultados thead tr th:nth-child(1) { width: 40px; }
-        #tablaResultados thead tr th:nth-child(2) { width: 120px; }
-        #tablaResultados thead tr th:nth-child(3) { width: 180px; }
-        #tablaResultados thead tr th:nth-child(4) { width: 70px; }
-        #tablaResultados thead tr th:nth-child(5) { width: 220px; }
-        #tablaResultados thead tr th:nth-child(6) { width: 180px; }
-        #tablaResultados thead tr th:nth-child(7) { width: 120px; }
-        #tablaResultados thead tr th:nth-child(8) { width: 100px; }
-        #tablaResultados thead tr th:nth-child(9) { width: 90px; }
-        #tablaResultados thead tr th:nth-child(10) { width: 110px; }
-        #tablaResultados thead tr th:nth-child(11) { width: 150px; }
 
-        tr:hover { background-color: #f7f7f7; }
+        .hidden { 
+            display: none; 
+        }
 
         /* Mensajes de Estado */
         .status-msg { 
@@ -285,42 +164,11 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .hidden { display: none; }
-        
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        /* CLASES DE COLOR */
-        .badge.conformidad-ok { background-color: var(--color-celeste); color: white; } 
-        .badge.conformidad-disconforme { background-color: var(--color-amarillo); color: black; } 
-        .badge.firmado-si { background-color: var(--color-verde); color: white; }
-        .badge.firmado-no { background-color: var(--color-rojo); color: white; }
-        .badge.firmado-neutro { background-color: var(--color-gris); color: white; }
-
-        .contact-info {
-            display: block;
-            font-size: 0.8em;
-            color: #6c757d;
-        }
-
         /* Media Queries para responsividad */
         @media (max-width: 768px) {
             body { padding: 20px; }
             .container { padding: 20px; }
-            .filtros-grid { grid-template-columns: 1fr; }
-            
-            .search-area { flex-direction: column; align-items: stretch; }
-            .search-area button { width: 100%; }
-            
             .charts-container { grid-template-columns: 1fr; }
-            
-            .filtros-grid-buttons { flex-direction: column; align-items: stretch; }
-            .filtros-grid-buttons button { width: 100%; min-width: auto; }
         }
         @media (max-width: 1200px) and (min-width: 769px) {
             .charts-container { grid-template-columns: repeat(2, 1fr); }
@@ -330,16 +178,21 @@
 <body>
 
 <div class="container">
-    <h3>Información de Legajos</h3>
+    <h3>Dashboard RRHH - Estadísticas Globales</h3>
     
+    <div id="panelEstado" class="status-msg">
+        <div class="loader"></div>
+        <p>Cargando gráficos...</p>
+    </div>
+
     <div id="chartsGlobales" class="charts-container hidden">
         <div class="chart-box">
-            <h4>Años</h4>
-            <canvas id="chartAnioGlobal"></canvas>
+            <h4>Total de Empleados</h4>
+            <div id="kpiNumEmpleados" class="kpi-card"></div>
         </div>
         <div class="chart-box">
-            <h4>Períodos</h4>
-            <canvas id="chartPeriodoGlobal"></canvas>
+            <h4>Categorías</h4>
+            <canvas id="chartCategoriasGlobal"></canvas>
         </div>
         <div class="chart-box">
             <h4>Recibos Firmados</h4>
@@ -350,178 +203,32 @@
             <canvas id="chartConformidadGlobal"></canvas>
         </div>
     </div>
-    
-    <form id="searchForm">
-        <div class="search-area">
-            <div class="form-group">
-                <label for="txtLegajo">Número de Legajo</label>
-                <input type="number" id="txtLegajo" name="legajo" placeholder="Ej: 12345">
-            </div>
-            <button type="submit" onclick="consultarLegajo(event)">Buscar</button>
-            <button type="button" id="btnFiltros" class="primary" onclick="toggleFiltros()">
-                Filtros
-            </button>
-            <button type="button" class="danger" onclick="limpiarFiltros()">Limpiar</button>
-        </div>
-
-        <div id="filtrosAvanzados" style="display: none;">
-            <div class="filtros-grid">
-                
-                <div class="form-group">
-                    <label for="txtDNI">DNI</label>
-                    <input type="text" id="txtDNI" name="dni" placeholder="Ej: 30123456">
-                </div>
-                
-                <div class="form-group">
-                    <label for="txtCUIL">CUIL</label>
-                    <input type="text" id="txtCUIL" name="cuil" placeholder="Ej: 20-30123456-7">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtNombreApellido">Nombre y Apellido</label>
-                    <input type="text" id="txtNombreApellido" name="nombre_y_apellido" placeholder="Ej: Juan Pérez">
-                </div>
-                
-                <div class="form-group">
-                    <label for="txtCategoria">Categoría</label>
-                    <input type="text" id="txtCategoria" name="categoria" placeholder="Ej: Desarrollador">
-                </div>
-                
-                <div class="form-group">
-                    <label for="txtAnio">Año</label>
-                    <input type="number" id="txtAnio" name="anio" placeholder="Ej: 2024">
-                </div>
-
-                <div class="form-group">
-                    <label for="txtPeriodoMes">Período</label>
-                    <input type="text" id="txtPeriodoMes" name="periodo" placeholder="Ej: Noviembre">
-                </div>
-
-                <div class="form-group">
-                    <label for="selDocumentoFirmado">Documento Firmado</label>
-                    <select id="selDocumentoFirmado" name="firmado">
-                        <option value="">Cualquiera</option>
-                        <option value="Si">Si</option>
-                        <option value="No">No</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="selConformidad">Conformidad</label>
-                    <select id="selConformidad" name="conformidad">
-                        <option value="">Cualquiera</option>
-                        <option value="Conforme">Conforme</option>
-                        <option value="Disconforme">Disconforme</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <div id="panelEstado" class="status-msg">
-        <p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>
-        <p>Utilice el botón "Filtros (Mostrar)" para ver todas las opciones.</p>
-    </div>
-
-    <div class="table-wrapper">
-        <table id="tablaResultados" class="hidden">
-            <thead>
-                <tr>
-                    <th>Nº Reg.</th>
-                    <th>Clase Documental</th>
-                    <th>Título del Documento</th>
-                    <th>Legajo</th>
-                    <th>Nombre y Apellido</th>
-                    <th>Contacto</th>
-                    <th>Categoría</th>
-                    <th>Período</th>
-                    <th>Firmado</th>
-                    <th>Conformidad</th>
-                    <th>Observaciones</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpoTabla">
-            </tbody>
-        </table>
-    </div>
 </div>
 
 <script>
-    const API_SEARCH_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/formulario_rrhh_lpa';
     const API_DASHBOARD_URL = 'https://square-regular-honeybee.ngrok-free.app/webhook/dashboard_rrhh'; 
     
-    let chartAnioGlobalInstance = null;
-    let chartPeriodoGlobalInstance = null;
+    let chartCategoriasGlobalInstance = null;
     let chartFirmadoGlobalInstance = null;
     let chartConformidadGlobalInstance = null;
     
-    function getDisplayValue(value, placeholder = '-') {
-        const stringValue = String(value || '').trim();
-        return stringValue === '' || stringValue === 'null' || stringValue === 'undefined' ? placeholder : stringValue;
+    function crearGraficoNumEmpleadosGlobal(data) {
+        const kpiContainer = document.getElementById('kpiNumEmpleados');
+        const item = data[0]; // Solo hay un elemento: numEmpleados
+        
+        kpiContainer.innerHTML = `
+            <div class="kpi-value">${item.value}</div>
+            <div class="kpi-label">${item.label}</div>
+        `;
+        
+        // Aplicar gradiente dinámico al borde de la tarjeta
+        const chartBox = kpiContainer.closest('.chart-box');
+        chartBox.style.setProperty('--dynamic-gradient', 'linear-gradient(90deg, #667eea 0%, #764ba2 100%)');
     }
     
-    function crearGraficoAnioGlobal(data) {
-        const ctx = document.getElementById('chartAnioGlobal').getContext('2d');
-        if (chartAnioGlobalInstance) chartAnioGlobalInstance.destroy();
-        
-        const labels = data.map(item => item.label);
-        const values = data.map(item => item.value);
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140'];
-        
-        // Crear array de datos con colores y ordenar por valor descendente
-        const dataWithColors = data.map((item, index) => ({
-            value: item.value,
-            color: colors[index % colors.length]
-        })).sort((a, b) => b.value - a.value);
-        
-        // Crear gradiente dinámico basado en predominancia
-        const gradientColors = dataWithColors.map(item => item.color).join(', ');
-        const chartBox = document.getElementById('chartAnioGlobal').closest('.chart-box');
-        chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
-        
-        chartAnioGlobalInstance = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: values,
-                    backgroundColor: colors.slice(0, labels.length),
-                    borderWidth: 3,
-                    borderColor: '#fff',
-                    hoverOffset: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { 
-                        position: 'bottom', 
-                        labels: { 
-                            boxWidth: 14, 
-                            font: { size: 11, weight: '500' },
-                            padding: 12,
-                            color: '#2d3748'
-                        } 
-                    },
-                    datalabels: {
-                        color: '#fff',
-                        font: { weight: 'bold', size: 12 },
-                        formatter: (value, ctx) => {
-                            const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return percentage + '%';
-                        }
-                    }
-                }
-            },
-            plugins: [ChartDataLabels]
-        });
-    }
-    
-    function crearGraficoPeriodoGlobal(data) {
-        const ctx = document.getElementById('chartPeriodoGlobal').getContext('2d');
-        if (chartPeriodoGlobalInstance) chartPeriodoGlobalInstance.destroy();
+    function crearGraficoCategoriasGlobal(data) {
+        const ctx = document.getElementById('chartCategoriasGlobal').getContext('2d');
+        if (chartCategoriasGlobalInstance) chartCategoriasGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
         const values = data.map(item => item.value);
@@ -535,10 +242,10 @@
         
         // Crear gradiente dinámico basado en predominancia
         const gradientColors = dataWithColors.map(item => item.color).join(', ');
-        const chartBox = document.getElementById('chartPeriodoGlobal').closest('.chart-box');
+        const chartBox = document.getElementById('chartCategoriasGlobal').closest('.chart-box');
         chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
-        chartPeriodoGlobalInstance = new Chart(ctx, {
+        chartCategoriasGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
                 labels: labels,
@@ -710,288 +417,48 @@
             const data = await respuesta.json();
             console.log('📊 Datos recibidos del endpoint:', data);
             
-            // Separar los datos según su categoría
-            const anios = [];
-            const periodos = [];
-            const firmados = [];
-            const conformidades = [];
+            // Los datos ya vienen agrupados en el formato correcto
+            const { numEmpleados, categorias, firmados, conformidades } = data;
             
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            const estadosFirmado = ['Si', 'No', 'Sin dato', 'Pendiente'];
-            const estadosConformidad = ['Conforme', 'Disconforme'];
+            console.log('Datos agrupados:', { numEmpleados, categorias, firmados, conformidades });
             
-            data.forEach(item => {
-                const label = item.label;
-                
-                // Detectar años (números de 4 dígitos)
-                if (/^\d{4}$/.test(label)) {
-                    anios.push(item);
-                }
-                // Detectar meses
-                else if (meses.includes(label)) {
-                    periodos.push(item);
-                }
-                // Detectar estados de firmado (incluye Pendiente)
-                else if (estadosFirmado.includes(label)) {
-                    firmados.push(item);
-                }
-                // Detectar conformidad
-                else if (estadosConformidad.includes(label)) {
-                    conformidades.push(item);
-                }
-            });
-            
-            console.log('Clasificación:', { anios, periodos, firmados, conformidades });
-            
-            // Crear gráficos con los datos clasificados
-            if (anios.length > 0) {
-                console.log('✅ Creando gráfico de Año');
-                crearGraficoAnioGlobal(anios);
+            // Crear gráficos con los datos agrupados
+            if (numEmpleados && numEmpleados.value > 0) {
+                console.log('✅ Creando gráfico de N° Empleados');
+                crearGraficoNumEmpleadosGlobal([numEmpleados]);
             }
-            if (periodos.length > 0) {
-                console.log('✅ Creando gráfico de Período');
-                crearGraficoPeriodoGlobal(periodos);
+            if (categorias && categorias.length > 0) {
+                console.log('✅ Creando gráfico de Categorías');
+                crearGraficoCategoriasGlobal(categorias);
             }
-            if (firmados.length > 0) {
+            if (firmados && firmados.length > 0) {
                 console.log('✅ Creando gráfico de Firmado');
                 crearGraficoFirmadoGlobal(firmados);
             }
-            if (conformidades.length > 0) {
+            if (conformidades && conformidades.length > 0) {
                 console.log('✅ Creando gráfico de Conformidad');
                 crearGraficoConformidadGlobal(conformidades);
             }
             
+            // Ocultar mensaje de carga y mostrar gráficos
+            document.getElementById('panelEstado').classList.add('hidden');
             document.getElementById('chartsGlobales').classList.remove('hidden');
             console.log('✅ Gráficos globales cargados correctamente');
             
         } catch (error) {
             console.error('❌ Error al cargar gráficos globales:', error);
             console.error('Detalles del error:', error.message);
+            
+            // Mostrar mensaje de error al usuario
+            const panelEstado = document.getElementById('panelEstado');
+            panelEstado.innerHTML = `
+                <p style="color: red;">❌ Error al cargar los gráficos.</p>
+                <p>Por favor, verifique la conexión con el servidor.</p>
+            `;
         }
     }
     
-    function toggleFiltros() {
-        const filtrosDiv = document.getElementById('filtrosAvanzados');
-        const btnFiltros = document.getElementById('btnFiltros');
-        
-        const isHidden = filtrosDiv.style.display === 'none';
-
-        if (isHidden) {
-            filtrosDiv.style.display = 'block'; 
-            btnFiltros.textContent = 'Filtros (Ocultar)';
-            btnFiltros.classList.add('secondary');
-            btnFiltros.classList.remove('primary');
-            console.log("Filtros: VISIBLES"); 
-        } else {
-            filtrosDiv.style.display = 'none'; 
-            btnFiltros.textContent = 'Filtros (Mostrar)';
-            btnFiltros.classList.add('primary');
-            btnFiltros.classList.remove('secondary');
-            console.log("Filtros: OCULTOS");
-        }
-    }
-    
-    function limpiarFiltros() {
-        document.getElementById('searchForm').reset();
-        
-        document.getElementById('cuerpoTabla').innerHTML = '';
-        document.getElementById('tablaResultados').classList.add('hidden');
-        document.getElementById('panelEstado').classList.remove('hidden');
-        document.getElementById('panelEstado').innerHTML = `
-            <p>Ingrese un criterio de búsqueda (Legajo, DNI, etc.) y presione Buscar.</p>
-            <p>Utilice el botón "Filtros (Mostrar)" para ver todas las opciones.</p>
-        `;
-
-        console.log("Filtros y resultados limpiados.");
-    }
-
-    function obtenerParametrosBusqueda() {
-        const params = {};
-        const form = document.getElementById('searchForm');
-        const allInputs = form.querySelectorAll('input[name], select[name]');
-        
-        allInputs.forEach(input => {
-            const name = input.name;
-            const value = input.value.trim(); 
-            params[name] = value;
-        });
-        
-        return params;
-    }
-
-    function priorizarLegajos(documentos) {
-        if (!Array.isArray(documentos) || documentos.length === 0) {
-            return documentos;
-        }
-
-        const legajos = [];
-        const otros = [];
-
-        documentos.forEach(doc => {
-            try {
-                const clase = (doc.object_definition_name || '').toString().toUpperCase();
-                if (clase.includes('LEGAJO')) {
-                    legajos.push(doc);
-                } else {
-                    otros.push(doc);
-                }
-            } catch (e) {
-                otros.push(doc);
-            }
-        });
-
-        return [...legajos, ...otros];
-    }
-
-    function filtrarDocumentosParaGraficos(documentos) {
-        if (!Array.isArray(documentos) || documentos.length === 0) {
-            return documentos;
-        }
-
-        return documentos.filter(doc => {
-            try {
-                const clase = (doc.object_definition_name || '').toString().toUpperCase();
-                return clase.includes('RECIBO') || clase.includes('RECIBOS_DE_SUELDO') || clase.includes('RECIBO_FIRMADO');
-            } catch (e) {
-                return false;
-            }
-        });
-    }
-
-
-    async function consultarLegajo(event) {
-        event.preventDefault();
-
-        const params = obtenerParametrosBusqueda();
-        
-        const panelEstado = document.getElementById('panelEstado');
-        const tabla = document.getElementById('tablaResultados');
-        const cuerpoTabla = document.getElementById('cuerpoTabla');
-        
-        const hasFilters = Object.values(params).some(value => value.length > 0);
-
-        if (!hasFilters) {
-            panelEstado.innerHTML = `<p style="color: #dc3545; font-weight: bold;">Debe ingresar al menos un criterio de búsqueda.</p>`;
-            panelEstado.classList.remove('hidden');
-            tabla.classList.add('hidden');
-            return;
-        }
-
-        tabla.classList.add('hidden'); 
-        panelEstado.innerHTML = '<div class="loader"></div><p>Consultando...</p>';
-        panelEstado.classList.remove('hidden');
-
-        const query = new URLSearchParams(params).toString();
-        const urlConFiltros = `${API_SEARCH_URL}?${query}`;
-        
-        console.log("URL de consulta avanzada:", urlConFiltros);
-
-        try {
-            const respuesta = await fetch(urlConFiltros);
-
-            if (!respuesta.ok) {
-                let errorDetail = `Respuesta no exitosa (${respuesta.status} ${respuesta.statusText}).`;
-                try {
-                    const errorData = await respuesta.json(); 
-                    errorDetail = errorData.details || errorData.error || errorDetail;
-                } catch (e) {}
-                throw new Error(`Error HTTP: ${errorDetail}`);
-            }
-
-            const documentos = await respuesta.json();
-            cuerpoTabla.innerHTML = '';
-
-            if (!Array.isArray(documentos) || documentos.length === 0) {
-                panelEstado.innerHTML = `
-                    <p>⚠️ No se encontraron documentos con los filtros aplicados.</p>
-                    <p>Intente simplificar los criterios de búsqueda.</p>
-                `;
-            } else {
-                
-                const documentosOrdenados = priorizarLegajos(documentos);
-
-                documentosOrdenados.forEach((doc, index) => {
-                    
-                    const rawFirmado = getDisplayValue(doc.firmado);
-                    let firmadoTag;
-
-                    if (rawFirmado === '-') {
-                        firmadoTag = rawFirmado;
-                    } else {
-                        const normalizedFirmado = rawFirmado.toUpperCase();
-                        let firmadoClass = 'firmado-neutro';
-
-                        if (normalizedFirmado === 'SI' || normalizedFirmado === '1' || normalizedFirmado === 'TRUE') {
-                            firmadoClass = 'firmado-si';
-                        } else if (normalizedFirmado === 'NO' || normalizedFirmado === '0' || normalizedFirmado === 'FALSE') {
-                            firmadoClass = 'firmado-no';
-                        }
-
-                        firmadoTag = `<span class="badge ${firmadoClass}">${rawFirmado}</span>`;
-                    }
-                    
-                    const rawConformidad = getDisplayValue(doc.conformidad);
-                    let conformidadTag;
-
-                    if (rawConformidad === '-') {
-                        conformidadTag = rawConformidad;
-                    } else {
-                        const normalizedConformidad = rawConformidad.toUpperCase();
-                        let conformidadClass;
-
-                        if (normalizedConformidad.includes('DISCONFORME') || normalizedConformidad.includes('NO') || normalizedConformidad === '0') {
-                            conformidadClass = 'conformidad-disconforme';
-                        } else if (normalizedConformidad.includes('CONFORME') || normalizedConformidad.includes('OK') || normalizedConformidad === '1') {
-                            conformidadClass = 'conformidad-ok';
-                        }
-                        conformidadTag = `<span class="badge ${conformidadClass}">${rawConformidad}</span>`;
-                    }
-                    
-                    const periodoCompleto = `${getDisplayValue(doc.periodo, 'N/A')} - ${getDisplayValue(doc.anio, 'N/A')}`;
-
-                    const fila = `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${getDisplayValue(doc.object_definition_name, 'N/A')}</td>
-                            <td>${getDisplayValue(doc.object_title, 'N/A')}</td>
-                            <td>${getDisplayValue(doc.legajo)}</td>
-                            <td>
-                                <strong>${getDisplayValue(doc.nombre_y_apellido)}</strong>
-                                <span class="contact-info">DNI: ${getDisplayValue(doc.dni, 'N/A')} | CUIL: ${getDisplayValue(doc.cuil, 'N/A')}</span>
-                            </td>
-                            <td>
-                                Mail: ${getDisplayValue(doc.mail, 'N/A')}
-                                <span class="contact-info">Tel: ${getDisplayValue(doc.numero_celular, 'N/A')}</span>
-                            </td>
-                            <td>${getDisplayValue(doc.categoria)}</td>
-                            <td>${periodoCompleto}</td>
-                            <td>${firmadoTag}</td>
-                            <td>${conformidadTag}</td>
-                            <td>${getDisplayValue(doc.observaciones, 'Sin obs.')}</td>
-                        </tr>
-                    `;
-                    cuerpoTabla.innerHTML += fila;
-                });
-
-                panelEstado.classList.add('hidden');
-                tabla.classList.remove('hidden');
-            }
-
-        } catch (error) {
-            console.error("Error:", error);
-            panelEstado.innerHTML = `<p style="color: red;">❌ Error en la búsqueda.</p>`;
-        }
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-        const filtrosDiv = document.getElementById('filtrosAvanzados');
-        const btnFiltros = document.getElementById('btnFiltros');
-        
-        filtrosDiv.style.display = 'none'; 
-        btnFiltros.textContent = 'Filtros (Mostrar)';
-        btnFiltros.classList.add('secondary');
-        btnFiltros.classList.remove('primary');
-        
         // Cargar gráficos globales al iniciar
         cargarGraficosGlobales();
     });
