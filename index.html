@@ -555,19 +555,142 @@
     }
     
     // Funciones de navegación para los botones de acción
-    function irALegajos() {
-        console.log('📁 Navegar a Legajos');
-        window.location.href = 'http://172.16.16.60:8099/redirector';
+    async function irALegajos() {
+        try {
+            console.log('📁 Obteniendo token para navegar a Legajos...');
+            
+            // Construir URL con parámetros para obtener el token
+            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Legajos`;
+            console.log('📤 Solicitando token desde:', tokenUrl);
+            
+            // Hacer petición GET al backend para obtener el token
+            const response = await fetch(tokenUrl);
+            
+            console.log('📥 Respuesta recibida. Status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Error en respuesta:', errorText);
+                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
+            }
+            
+            // Obtener el token como texto plano
+            const token = await response.text();
+            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
+            
+            if (!token || token.trim() === '') {
+                console.error('❌ Token vacío o inválido');
+                throw new Error('No se recibió el token de autenticación en la respuesta');
+            }
+            
+            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
+            
+            // Construir la URL final con el token
+            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
+            
+            console.log('🚀 Navegando a:', finalUrl);
+            
+            // Navegar a la URL
+            window.location.href = finalUrl;
+            
+        } catch (error) {
+            console.error('❌ Error completo:', error);
+            console.error('❌ Mensaje de error:', error.message);
+            console.error('❌ Stack:', error.stack);
+            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
+        }
     }
     
-    function irAPendientes() {
-        console.log('⏰ Navegar a Pendientes de Firmar');
-        window.location.href = 'http://172.16.16.60:8099/redirector';
+    async function irAPendientes() {
+        try {
+            console.log('⏰ Obteniendo token para navegar a Pendientes de Firmar...');
+            
+            // Construir URL con parámetros para obtener el token
+            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Pendientes de firma`;
+            console.log('📤 Solicitando token desde:', tokenUrl);
+            
+            // Hacer petición GET al backend para obtener el token
+            const response = await fetch(tokenUrl);
+            
+            console.log('📥 Respuesta recibida. Status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Error en respuesta:', errorText);
+                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
+            }
+            
+            // Obtener el token como texto plano
+            const token = await response.text();
+            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
+            
+            if (!token || token.trim() === '') {
+                console.error('❌ Token vacío o inválido');
+                throw new Error('No se recibió el token de autenticación en la respuesta');
+            }
+            
+            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
+            
+            // Construir la URL final con el token
+            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
+            
+            console.log('🚀 Navegando a:', finalUrl);
+            
+            // Navegar a la URL
+            window.location.href = finalUrl;
+            
+        } catch (error) {
+            console.error('❌ Error completo:', error);
+            console.error('❌ Mensaje de error:', error.message);
+            console.error('❌ Stack:', error.stack);
+            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
+        }
     }
     
-    function irAFirmados() {
-        console.log('✅ Navegar a Firmados');
-        window.location.href = 'http://172.16.16.60:8099/redirector';
+    async function irAFirmados() {
+        try {
+            console.log('✅ Obteniendo token para navegar a Firmados...');
+            
+            // Construir URL con parámetros para obtener el token
+            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Firmados`;
+            console.log('📤 Solicitando token desde:', tokenUrl);
+            
+            // Hacer petición GET al backend para obtener el token
+            const response = await fetch(tokenUrl);
+            
+            console.log('📥 Respuesta recibida. Status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Error en respuesta:', errorText);
+                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
+            }
+            
+            // Obtener el token como texto plano
+            const token = await response.text();
+            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
+            
+            if (!token || token.trim() === '') {
+                console.error('❌ Token vacío o inválido');
+                throw new Error('No se recibió el token de autenticación en la respuesta');
+            }
+            
+            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
+            
+            // Construir la URL final con el token
+            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
+            
+            console.log('🚀 Navegando a:', finalUrl);
+            
+            // Navegar a la URL
+            window.location.href = finalUrl;
+            
+        } catch (error) {
+            console.error('❌ Error completo:', error);
+            console.error('❌ Mensaje de error:', error.message);
+            console.error('❌ Stack:', error.stack);
+            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
+        }
     }
     
     document.addEventListener('DOMContentLoaded', () => {
