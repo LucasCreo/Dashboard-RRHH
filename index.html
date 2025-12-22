@@ -140,6 +140,68 @@
             letter-spacing: 0.5px;
         }
 
+        /* Botones de Acciones Rápidas */
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 30px;
+            flex-wrap: wrap;
+        }
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 25px 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1.5px solid var(--btn-color);
+            opacity: 0.95;
+            min-width: 160px;
+        }
+        .action-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+            border-width: 2px;
+            opacity: 1;
+            background: linear-gradient(135deg, white 0%, rgba(255,255,255,0.98) 100%);
+        }
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: var(--btn-color);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .action-button:hover .action-icon {
+            transform: scale(1.1);
+        }
+        .action-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: center;
+        }
+        .action-button.legajo {
+            --btn-color: #667eea;
+        }
+        .action-button.pendientes {
+            --btn-color: #f5576c;
+        }
+        .action-button.firmados {
+            --btn-color: #43e97b;
+        }
+
         .hidden { 
             display: none; 
         }
@@ -178,7 +240,7 @@
 <body>
 
 <div class="container">
-    <h3>Dashboard RRHH - Estadísticas Globales</h3>
+    <h3>Estadísticas Globales</h3>
     
     <div id="panelEstado" class="status-msg">
         <div class="loader"></div>
@@ -201,6 +263,40 @@
         <div class="chart-box">
             <h4>Conformidad</h4>
             <canvas id="chartConformidadGlobal"></canvas>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <div class="action-button legajo" onclick="irALegajos()">
+            <div class="action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="action-label">Legajos</div>
+        </div>
+        
+        <div class="action-button pendientes" onclick="irAPendientes()">
+            <div class="action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <div class="action-label">Pendientes de Firmar</div>
+        </div>
+        
+        <div class="action-button firmados" onclick="irAFirmados()">
+            <div class="action-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <div class="action-label">Firmados</div>
         </div>
     </div>
 </div>
@@ -456,6 +552,22 @@
                 <p>Por favor, verifique la conexión con el servidor.</p>
             `;
         }
+    }
+    
+    // Funciones de navegación para los botones de acción
+    function irALegajos() {
+        console.log('📁 Navegar a Legajos');
+        window.location.href = 'http://172.16.16.60:8099/redirector';
+    }
+    
+    function irAPendientes() {
+        console.log('⏰ Navegar a Pendientes de Firmar');
+        window.location.href = 'http://172.16.16.60:8099/redirector';
+    }
+    
+    function irAFirmados() {
+        console.log('✅ Navegar a Firmados');
+        window.location.href = 'http://172.16.16.60:8099/redirector';
     }
     
     document.addEventListener('DOMContentLoaded', () => {
