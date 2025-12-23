@@ -329,57 +329,117 @@
     
     // ========== GESTIÓN DE TEMA DESDE PLATAFORMA ==========
     /**
-     * Lee la cookie spaceThemeStore y aplica el tema correspondiente
+     * Lee el tema desde múltiples fuentes (cookie, URL, postMessage) y lo aplica
+     * Soporta integración con plataforma mediante:
+     * 1. Cookie: spaceThemeStore (mismo dominio)
+     * 2. URL: ?darkMode=true&primaryColor=%23aea1ff
+     * 3. postMessage: para iframes (parent envía tema)
      */
-    function aplicarTemaPlataforma() {
+    function aplicarTema(themeData) {
         try {
-            // Leer la cookie spaceThemeStore
-            const cookies = document.cookie.split(';');
-            let spaceThemeCookie = null;
+            console.log('🎨 Aplicando tema:', themeData);
             
-            for (let cookie of cookies) {
-                const [name, value] = cookie.trim().split('=');
-                if (name === 'spaceThemeStore') {
-                    spaceThemeCookie = decodeURIComponent(value);
-                    break;
-                }
-            }
-            
-            if (spaceThemeCookie) {
-                console.log('🎨 Cookie de tema encontrada:', spaceThemeCookie);
-                
-                // Parsear el JSON de la cookie
-                const themeData = JSON.parse(spaceThemeCookie);
-                console.log('🎨 Datos del tema:', themeData);
-                
-                // Aplicar modo dark/light según la configuración
-                if (themeData.darkMode === true) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    console.log('🌙 Modo oscuro aplicado');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'light');
-                    console.log('☀️ Modo claro aplicado');
-                }
-                
-                // Opcional: Aplicar color primario personalizado si está disponible
-                if (themeData.primaryColor) {
-                    document.documentElement.style.setProperty('--primary', themeData.primaryColor);
-                    console.log('🎨 Color primario personalizado aplicado:', themeData.primaryColor);
-                }
-                
+            // Aplicar modo dark/light
+            if (themeData.darkMode === true) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                console.log('🌙 Modo oscuro aplicado');
             } else {
-                console.log('ℹ️ No se encontró cookie de tema, usando tema claro por defecto');
                 document.documentElement.setAttribute('data-theme', 'light');
+                console.log('☀️ Modo claro aplicado');
             }
+            
+            // Aplicar color primario personalizado si está disponible
+            if (themeData.primaryColor) {
+                document.documentElement.style.setProperty('--primary', themeData.primaryColor);
+                console.log('🎨 Color primario personalizado aplicado:', themeData.primaryColor);
+            }
+            
+            return true;
         } catch (error) {
-            console.error('❌ Error al leer/aplicar tema de plataforma:', error);
-            // En caso de error, usar tema claro por defecto
-            document.documentElement.setAttribute('data-theme', 'light');
+            console.error('❌ Error al aplicar tema:', error);
+            return false;
         }
     }
     
+    function leerTemaDeCookie() {
+        try {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'spaceThemeStore') {
+                    const spaceThemeCookie = decodeURIComponent(value);
+                    console.log('🍪 Cookie de tema encontrada');
+                    return JSON.parse(spaceThemeCookie);
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error al leer cookie:', error);
+        }
+        return null;
+    }
+    
+    function leerTemaDeURL() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const darkMode = urlParams.get('darkMode');
+            const primaryColor = urlParams.get('primaryColor');
+            
+            if (darkMode !== null) {
+                console.log('🔗 Parámetros de tema encontrados en URL');
+                return {
+                    darkMode: darkMode === 'true',
+                    primaryColor: primaryColor || null
+                };
+            }
+        } catch (error) {
+            console.error('❌ Error al leer parámetros de URL:', error);
+        }
+        return null;
+    }
+    
+    function aplicarTemaPlataforma() {
+        // Prioridad 1: Leer de Cookie (mismo dominio)
+        let themeData = leerTemaDeCookie();
+        if (themeData) {
+            console.log('✅ Tema obtenido desde Cookie');
+            aplicarTema(themeData);
+            return;
+        }
+        
+        // Prioridad 2: Leer de URL (iframe o link directo)
+        themeData = leerTemaDeURL();
+        if (themeData) {
+            console.log('✅ Tema obtenido desde URL');
+            aplicarTema(themeData);
+            return;
+        }
+        
+        // Prioridad 3: Usar tema por defecto
+        console.log('ℹ️ No se encontró configuración de tema, usando modo claro por defecto');
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+    
+    // Escuchar mensajes de postMessage (para iframe)
+    window.addEventListener('message', (event) => {
+        try {
+            // Validar que el mensaje tenga el formato esperado
+            if (event.data && typeof event.data === 'object' && 'darkMode' in event.data) {
+                console.log('📨 Tema recibido via postMessage:', event.data);
+                aplicarTema(event.data);
+            }
+        } catch (error) {
+            console.error('❌ Error al procesar postMessage:', error);
+        }
+    });
+    
     // Aplicar tema al cargar la página
     aplicarTemaPlataforma();
+    
+    // Si está en iframe, solicitar tema al parent
+    if (window.parent !== window) {
+        console.log('🖼️ Detectado iframe, solicitando tema al parent...');
+        window.parent.postMessage({ type: 'requestTheme' }, '*');
+    }
     // ========== FIN GESTIÓN DE TEMA ==========
     
     function crearGraficoNumEmpleadosGlobal(data) {
