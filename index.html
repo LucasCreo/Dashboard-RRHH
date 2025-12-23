@@ -13,16 +13,35 @@
     <style>
         /* --- ESTILOS CSS --- */
         :root {
+            /* Tema Claro (default) */
             --primary: #007bff;
             --bg: #f4f6f9;
             --card-bg: #ffffff;
             --border: #dee2e6;
             --text-main: #343a40;
+            --text-secondary: #6c757d;
+            --gradient-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             --color-celeste: #29b6f6; 
             --color-verde: #28a745; 
             --color-rojo: #dc3545; 
             --color-amarillo: #ffc107; 
             --color-gris: #6c757d; 
+        }
+        
+        /* Tema Oscuro */
+        [data-theme="dark"] {
+            --primary: #aea1ff;
+            --bg: #1a1a2e;
+            --card-bg: #16213e;
+            --border: #2d3748;
+            --text-main: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --gradient-bg: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+        }
+        
+        /* Transición suave al cambiar de tema */
+        body, .container, .chart-box, .action-button {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
@@ -66,12 +85,12 @@
             gap: 25px;
             margin-bottom: 30px;
             padding: 30px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--gradient-bg);
             border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
         }
         .chart-box {
-            background: white;
+            background: var(--card-bg);
             padding: 20px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
@@ -104,7 +123,7 @@
         .chart-box h4 {
             margin: 0 0 15px 0;
             font-size: 0.95rem;
-            color: #2d3748;
+            color: var(--text-main);
             font-weight: 700;
             text-align: center;
             letter-spacing: 0.3px;
@@ -134,7 +153,7 @@
         }
         .kpi-label {
             font-size: 0.9rem;
-            color: #6c757d;
+            color: var(--text-secondary);
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -154,7 +173,7 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            background: white;
+            background: var(--card-bg);
             padding: 25px 35px;
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -189,7 +208,7 @@
         .action-label {
             font-size: 0.95rem;
             font-weight: 600;
-            color: #2d3748;
+            color: var(--text-main);
             text-align: center;
         }
         .action-button.legajo {
@@ -209,7 +228,7 @@
         /* Mensajes de Estado */
         .status-msg { 
             text-align: center; 
-            color: #6c757d; 
+            color: var(--text-secondary); 
             padding: 30px; 
             font-style: italic; 
         }
@@ -307,6 +326,61 @@
     let chartCategoriasGlobalInstance = null;
     let chartFirmadoGlobalInstance = null;
     let chartConformidadGlobalInstance = null;
+    
+    // ========== GESTIÓN DE TEMA DESDE PLATAFORMA ==========
+    /**
+     * Lee la cookie spaceThemeStore y aplica el tema correspondiente
+     */
+    function aplicarTemaPlataforma() {
+        try {
+            // Leer la cookie spaceThemeStore
+            const cookies = document.cookie.split(';');
+            let spaceThemeCookie = null;
+            
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'spaceThemeStore') {
+                    spaceThemeCookie = decodeURIComponent(value);
+                    break;
+                }
+            }
+            
+            if (spaceThemeCookie) {
+                console.log('🎨 Cookie de tema encontrada:', spaceThemeCookie);
+                
+                // Parsear el JSON de la cookie
+                const themeData = JSON.parse(spaceThemeCookie);
+                console.log('🎨 Datos del tema:', themeData);
+                
+                // Aplicar modo dark/light según la configuración
+                if (themeData.darkMode === true) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    console.log('🌙 Modo oscuro aplicado');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    console.log('☀️ Modo claro aplicado');
+                }
+                
+                // Opcional: Aplicar color primario personalizado si está disponible
+                if (themeData.primaryColor) {
+                    document.documentElement.style.setProperty('--primary', themeData.primaryColor);
+                    console.log('🎨 Color primario personalizado aplicado:', themeData.primaryColor);
+                }
+                
+            } else {
+                console.log('ℹ️ No se encontró cookie de tema, usando tema claro por defecto');
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        } catch (error) {
+            console.error('❌ Error al leer/aplicar tema de plataforma:', error);
+            // En caso de error, usar tema claro por defecto
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    }
+    
+    // Aplicar tema al cargar la página
+    aplicarTemaPlataforma();
+    // ========== FIN GESTIÓN DE TEMA ==========
     
     function crearGraficoNumEmpleadosGlobal(data) {
         const kpiContainer = document.getElementById('kpiNumEmpleados');
@@ -423,7 +497,7 @@
                             boxWidth: 14, 
                             font: { size: 11, weight: '500' },
                             padding: 12,
-                            color: '#2d3748'
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim()
                         } 
                     },
                     datalabels: {
@@ -483,7 +557,7 @@
                             boxWidth: 14, 
                             font: { size: 11, weight: '500' },
                             padding: 12,
-                            color: '#2d3748'
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim()
                         } 
                     },
                     datalabels: {
