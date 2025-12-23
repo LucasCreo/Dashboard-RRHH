@@ -689,142 +689,22 @@
     }
     
     // Funciones de navegación para los botones de acción
-    async function irALegajos() {
-        try {
-            console.log('📁 Obteniendo token para navegar a Legajos...');
-            
-            // Construir URL con parámetros para obtener el token
-            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Legajos`;
-            console.log('📤 Solicitando token desde:', tokenUrl);
-            
-            // Hacer petición GET al backend para obtener el token
-            const response = await fetch(tokenUrl);
-            
-            console.log('📥 Respuesta recibida. Status:', response.status);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Error en respuesta:', errorText);
-                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
-            }
-            
-            // Obtener el token como texto plano
-            const token = await response.text();
-            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
-            
-            if (!token || token.trim() === '') {
-                console.error('❌ Token vacío o inválido');
-                throw new Error('No se recibió el token de autenticación en la respuesta');
-            }
-            
-            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
-            
-            // Construir la URL final con el token
-            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
-            
-            console.log('🚀 Navegando a:', finalUrl);
-            
-            // Navegar a la URL
-            window.location.href = finalUrl;
-            
-        } catch (error) {
-            console.error('❌ Error completo:', error);
-            console.error('❌ Mensaje de error:', error.message);
-            console.error('❌ Stack:', error.stack);
-            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
-        }
+    function irALegajos() {
+        console.log('📁 Navegando a Legajos...');
+        const url = 'http://172.16.16.60:8096/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2239f1da4b-9b5b-45c3-ae56-fbfbb81c082d%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%224b3eedff-8145-4f70-8e41-384f6ce3fd7f%22%7D%5D%7D&title=Legajos&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
+        window.location.href = url;
     }
     
-    async function irAPendientes() {
-        try {
-            console.log('⏰ Obteniendo token para navegar a Pendientes de Firmar...');
-            
-            // Construir URL con parámetros para obtener el token
-            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Pendientes de firma`;
-            console.log('📤 Solicitando token desde:', tokenUrl);
-            
-            // Hacer petición GET al backend para obtener el token
-            const response = await fetch(tokenUrl);
-            
-            console.log('📥 Respuesta recibida. Status:', response.status);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Error en respuesta:', errorText);
-                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
-            }
-            
-            // Obtener el token como texto plano
-            const token = await response.text();
-            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
-            
-            if (!token || token.trim() === '') {
-                console.error('❌ Token vacío o inválido');
-                throw new Error('No se recibió el token de autenticación en la respuesta');
-            }
-            
-            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
-            
-            // Construir la URL final con el token
-            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
-            
-            console.log('🚀 Navegando a:', finalUrl);
-            
-            // Navegar a la URL
-            window.location.href = finalUrl;
-            
-        } catch (error) {
-            console.error('❌ Error completo:', error);
-            console.error('❌ Mensaje de error:', error.message);
-            console.error('❌ Stack:', error.stack);
-            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
-        }
+    function irAPendientes() {
+        console.log('⏰ Navegando a Pendientes de Firma...');
+        const url = 'http://172.16.16.60:8096/widgets/query?filter=%7B%22combinator%22%3A%22or%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2267631d82-0173-425e-b7f7-4733c944e9d6%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22No%22%7D%2C%7B%22id%22%3A%226aa50f48-1278-4842-bf1e-f927855a3ae3%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22null%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22%22%7D%2C%7B%22id%22%3A%2264b4aff3-4b4b-49bc-8c42-ed634f71f3eb%22%2C%22rules%22%3A%5B%7B%22id%22%3A%22f828b219-160e-430c-b7b7-df214a187566%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%226f5abc1c-24fe-4010-94fe-1771191ebc90%22%7D%5D%2C%22combinator%22%3A%22and%22%2C%22not%22%3Afalse%7D%2C%7B%22id%22%3A%22362a82aa-5b8b-484d-911a-95ff3f9be89b%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22NO%22%7D%5D%7D&title=Pendientes+de+Firma&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
+        window.location.href = url;
     }
     
-    async function irAFirmados() {
-        try {
-            console.log('✅ Obteniendo token para navegar a Firmados...');
-            
-            // Construir URL con parámetros para obtener el token
-            const tokenUrl = `${API_DASHBOARD_URL}?action=get_auth_token&username=lcreo@grupolpa.com&password=12345&tipo=Firmados`;
-            console.log('📤 Solicitando token desde:', tokenUrl);
-            
-            // Hacer petición GET al backend para obtener el token
-            const response = await fetch(tokenUrl);
-            
-            console.log('📥 Respuesta recibida. Status:', response.status);
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('❌ Error en respuesta:', errorText);
-                throw new Error(`Error al obtener token: ${response.status} - ${errorText}`);
-            }
-            
-            // Obtener el token como texto plano
-            const token = await response.text();
-            console.log('📥 Token recibido:', token.substring(0, 50) + '...');
-            
-            if (!token || token.trim() === '') {
-                console.error('❌ Token vacío o inválido');
-                throw new Error('No se recibió el token de autenticación en la respuesta');
-            }
-            
-            console.log('✅ Token obtenido exitosamente:', token.substring(0, 50) + '...');
-            
-            // Construir la URL final con el token
-            const finalUrl = `http://172.16.16.60:8096/loginWithToken?library=32a76e80-1d2d-47fe-9b9d-d423cf644d71&callback=/widgets/storedsearch&token=${token}`;
-            
-            console.log('🚀 Navegando a:', finalUrl);
-            
-            // Navegar a la URL
-            window.location.href = finalUrl;
-            
-        } catch (error) {
-            console.error('❌ Error completo:', error);
-            console.error('❌ Mensaje de error:', error.message);
-            console.error('❌ Stack:', error.stack);
-            alert(`Error al autenticar: ${error.message}\n\nRevisa la consola para más detalles.`);
-        }
+    function irAFirmados() {
+        console.log('✅ Navegando a Firmados...');
+        const url = 'http://172.16.16.60:8096/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%22e4d50f55-597e-4338-b30e-034034004b6e%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22c67cdebf-2665-408a-90d3-fd74ad528dc1%22%7D%5D%7D&title=Recibos+Firmados&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
+        window.location.href = url;
     }
     
     document.addEventListener('DOMContentLoaded', () => {
