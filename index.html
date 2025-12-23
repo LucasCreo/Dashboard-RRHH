@@ -245,6 +245,67 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        /* Animaciones de entrada */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Aplicar animación a las tarjetas de gráficos */
+        .charts-container:not(.hidden) .chart-box {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .charts-container:not(.hidden) .chart-box:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+        .charts-container:not(.hidden) .chart-box:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .charts-container:not(.hidden) .chart-box:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+        .charts-container:not(.hidden) .chart-box:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animación para el contenedor de gráficos */
+        .charts-container:not(.hidden) {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Animación para los botones de acción */
+        .quick-actions .action-button {
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .quick-actions .action-button:nth-child(1) {
+            animation-delay: 0.6s;
+        }
+        .quick-actions .action-button:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+        .quick-actions .action-button:nth-child(3) {
+            animation-delay: 0.8s;
+        }
+
         /* Media Queries para responsividad */
         @media (max-width: 768px) {
             body { padding: 20px; }
@@ -490,6 +551,13 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: 'easeInOutQuart',
+                    delay: 100
+                },
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -550,6 +618,13 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: 'easeInOutQuart',
+                    delay: 200
+                },
                 plugins: {
                     legend: { 
                         position: 'bottom', 
@@ -610,6 +685,13 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: 'easeInOutQuart',
+                    delay: 300
+                },
                 plugins: {
                     legend: { 
                         position: 'bottom', 
