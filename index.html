@@ -225,6 +225,187 @@
             display: none; 
         }
 
+        /* Modal de detalles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.05);
+            transform: rotate(90deg);
+        }
+
+        .categoria-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: var(--bg);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            border-left: 4px solid;
+        }
+
+        .categoria-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .categoria-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .categoria-info {
+            flex: 1;
+        }
+
+        .categoria-nombre {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .categoria-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .categoria-valor {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-left: auto;
+        }
+
+        /* Texto de click para detalles */
+        .click-details {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            font-style: italic;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .click-details:hover {
+            color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Leyenda personalizada debajo de gráficos */
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        /* Estilo para el canvas clickeable */
+        #chartCategoriasGlobal {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #chartCategoriasGlobal:hover {
+            transform: scale(1.05);
+        }
+
         /* Mensajes de Estado */
         .status-msg { 
             text-align: center; 
@@ -560,13 +741,7 @@
                 },
                 plugins: {
                     legend: { 
-                        position: 'bottom', 
-                        labels: { 
-                            boxWidth: 14, 
-                            font: { size: 11, weight: '500' },
-                            padding: 12,
-                            color: '#2d3748'
-                        } 
+                        display: false  // Ocultar leyenda para mantener tamaño del gráfico
                     },
                     datalabels: {
                         color: '#fff',
@@ -581,6 +756,23 @@
             },
             plugins: [ChartDataLabels]
         });
+        
+        // Agregar texto "Click para ver detalles" debajo del gráfico
+        const chartContainer = document.getElementById('chartCategoriasGlobal').parentElement;
+        let clickText = chartContainer.querySelector('.click-details');
+        if (!clickText) {
+            clickText = document.createElement('div');
+            clickText.className = 'click-details';
+            clickText.textContent = 'Click para ver detalles';
+            chartContainer.appendChild(clickText);
+            
+            // Agregar evento click al texto también
+            clickText.addEventListener('click', () => mostrarDetallesCategorias(data, colors));
+        }
+        
+        // Agregar evento click al canvas
+        const canvas = document.getElementById('chartCategoriasGlobal');
+        canvas.onclick = () => mostrarDetallesCategorias(data, colors);
     }
     
     function crearGraficoFirmadoGlobal(data) {
@@ -627,13 +819,7 @@
                 },
                 plugins: {
                     legend: { 
-                        position: 'bottom', 
-                        labels: { 
-                            boxWidth: 14, 
-                            font: { size: 11, weight: '500' },
-                            padding: 12,
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim()
-                        } 
+                        display: false  // Ocultar leyenda para mantener tamaño del gráfico
                     },
                     datalabels: {
                         color: '#fff',
@@ -648,7 +834,97 @@
             },
             plugins: [ChartDataLabels]
         });
+        
+        // Agregar leyenda personalizada debajo del gráfico
+        const chartContainer = document.getElementById('chartFirmadoGlobal').parentElement;
+        let legendDiv = chartContainer.querySelector('.chart-legend');
+        if (!legendDiv) {
+            legendDiv = document.createElement('div');
+            legendDiv.className = 'chart-legend';
+            
+            // Crear leyenda solo para los valores que existen
+            const legendItems = labels.map((label, index) => {
+                const color = colors[index];
+                return `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <span>${label}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            legendDiv.innerHTML = legendItems;
+            chartContainer.appendChild(legendDiv);
+        }
     }
+    
+    /**
+     * Muestra un modal con los detalles de todas las categorías
+     */
+    function mostrarDetallesCategorias(data, colors) {
+        // Calcular total para porcentajes
+        const total = data.reduce((sum, item) => sum + item.value, 0);
+        
+        // Crear modal si no existe
+        let modal = document.getElementById('modalCategorias');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'modalCategorias';
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Detalle de Categorías</h3>
+                        <button class="modal-close" onclick="cerrarModalCategorias()">×</button>
+                    </div>
+                    <div id="categoriasLista"></div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Cerrar al hacer click fuera del modal
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    cerrarModalCategorias();
+                }
+            });
+        }
+        
+        // Generar lista de categorías ordenadas por valor
+        const categoriasOrdenadas = data
+            .map((item, index) => ({
+                ...item,
+                color: colors[index % colors.length],
+                porcentaje: ((item.value / total) * 100).toFixed(1)
+            }))
+            .sort((a, b) => b.value - a.value);
+        
+        const listaHTML = categoriasOrdenadas.map(item => `
+            <div class="categoria-item" style="border-left-color: ${item.color}">
+                <div class="categoria-color" style="background-color: ${item.color}"></div>
+                <div class="categoria-info">
+                    <div class="categoria-nombre">${item.label}</div>
+                    <div class="categoria-stats">
+                        <span>👥 ${item.value} empleado${item.value !== 1 ? 's' : ''}</span>
+                        <span>📊 ${item.porcentaje}%</span>
+                    </div>
+                </div>
+                <div class="categoria-valor">${item.value}</div>
+            </div>
+        `).join('');
+        
+        document.getElementById('categoriasLista').innerHTML = listaHTML;
+        modal.classList.add('active');
+    }
+    
+    /**
+     * Cierra el modal de categorías
+     */
+    function cerrarModalCategorias() {
+        const modal = document.getElementById('modalCategorias');
+        if (modal) {
+            modal.classList.remove('active');
+        }    }
     
     function crearGraficoConformidadGlobal(data) {
         const ctx = document.getElementById('chartConformidadGlobal').getContext('2d');
@@ -694,13 +970,7 @@
                 },
                 plugins: {
                     legend: { 
-                        position: 'bottom', 
-                        labels: { 
-                            boxWidth: 14, 
-                            font: { size: 11, weight: '500' },
-                            padding: 12,
-                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-main').trim()
-                        } 
+                        display: false  // Ocultar leyenda para mantener tamaño del gráfico
                     },
                     datalabels: {
                         color: '#fff',
@@ -715,6 +985,28 @@
             },
             plugins: [ChartDataLabels]
         });
+        
+        // Agregar leyenda personalizada debajo del gráfico
+        const chartContainer = document.getElementById('chartConformidadGlobal').parentElement;
+        let legendDiv = chartContainer.querySelector('.chart-legend');
+        if (!legendDiv) {
+            legendDiv = document.createElement('div');
+            legendDiv.className = 'chart-legend';
+            
+            // Crear leyenda solo para los valores que existen
+            const legendItems = labels.map((label, index) => {
+                const color = colors[index];
+                return `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${color}"></div>
+                        <span>${label}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            legendDiv.innerHTML = legendItems;
+            chartContainer.appendChild(legendDiv);
+        }
     }
     
     async function cargarGraficosGlobales() {
