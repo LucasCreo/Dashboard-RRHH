@@ -1080,7 +1080,7 @@
     // Funciones de navegación para los botones de acción
     function irALegajos() {
         console.log('📁 Navegando a Legajos...');
-        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2239f1da4b-9b5b-45c3-ae56-fbfbb81c082d%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%224b3eedff-8145-4f70-8e41-384f6ce3fd7f%22%7D%5D%7D&title=Legajos&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
+        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2239f1da4b-9b5b-45c3-ae56-fbfbb81c082d%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%224b3eedff-8145-4f70-8e41-384f6ce3fd7f%22%7D%5D%7D&title=%22Legajos%22&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
         const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${callback}`;
         window.location.href = url;
     }
