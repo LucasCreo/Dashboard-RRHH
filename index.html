@@ -133,29 +133,6 @@
             height: auto !important;
         }
 
-        /* Mensaje de sin datos */
-        .no-data-message {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            color: var(--text-secondary);
-            text-align: center;
-            padding: 20px;
-        }
-        .no-data-message svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 15px;
-            opacity: 0.3;
-        }
-        .no-data-message p {
-            margin: 0;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
         .kpi-card {
             display: flex;
             flex-direction: column;
@@ -695,45 +672,7 @@
     }
     
     function crearGraficoCategoriasGlobal(data) {
-        const chartContainer = document.getElementById('chartCategoriasGlobal').parentElement;
-        const canvas = document.getElementById('chartCategoriasGlobal');
-        
-        // Verificar si hay datos
-        const tienesDatos = data && data.length > 0 && data.some(item => item.value > 0);
-        
-        if (!tienesDatos) {
-            // Ocultar canvas y mostrar mensaje de sin datos
-            canvas.style.display = 'none';
-            
-            // Eliminar mensaje anterior si existe
-            let noDataMsg = chartContainer.querySelector('.no-data-message');
-            if (!noDataMsg) {
-                noDataMsg = document.createElement('div');
-                noDataMsg.className = 'no-data-message';
-                noDataMsg.innerHTML = `
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <p>Aún no hay datos</p>
-                `;
-                chartContainer.appendChild(noDataMsg);
-            } else {
-                noDataMsg.style.display = 'flex';
-            }
-            
-            // Eliminar el texto "Click para ver detalles" si existe
-            const clickText = chartContainer.querySelector('.click-details');
-            if (clickText) clickText.remove();
-            
-            return;
-        }
-        
-        // Mostrar canvas y ocultar mensaje de sin datos
-        canvas.style.display = 'block';
-        const noDataMsg = chartContainer.querySelector('.no-data-message');
-        if (noDataMsg) noDataMsg.style.display = 'none';
-        
-        const ctx = canvas.getContext('2d');
+        const ctx = document.getElementById('chartCategoriasGlobal').getContext('2d');
         if (chartCategoriasGlobalInstance) chartCategoriasGlobalInstance.destroy();
         
         const labels = data.map(item => item.label);
@@ -810,45 +749,7 @@
     }
     
     function crearGraficoFirmadoGlobal(data) {
-        const chartContainer = document.getElementById('chartFirmadoGlobal').parentElement;
-        const canvas = document.getElementById('chartFirmadoGlobal');
-        
-        // Verificar si hay datos
-        const tienesDatos = data && data.length > 0 && data.some(item => item.value > 0);
-        
-        if (!tienesDatos) {
-            // Ocultar canvas y mostrar mensaje de sin datos
-            canvas.style.display = 'none';
-            
-            // Eliminar mensaje anterior si existe
-            let noDataMsg = chartContainer.querySelector('.no-data-message');
-            if (!noDataMsg) {
-                noDataMsg = document.createElement('div');
-                noDataMsg.className = 'no-data-message';
-                noDataMsg.innerHTML = `
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <p>Aún no hay datos</p>
-                `;
-                chartContainer.appendChild(noDataMsg);
-            } else {
-                noDataMsg.style.display = 'flex';
-            }
-            
-            // Eliminar leyenda si existe
-            const legendDiv = chartContainer.querySelector('.chart-legend');
-            if (legendDiv) legendDiv.remove();
-            
-            return;
-        }
-        
-        // Mostrar canvas y ocultar mensaje de sin datos
-        canvas.style.display = 'block';
-        const noDataMsg = chartContainer.querySelector('.no-data-message');
-        if (noDataMsg) noDataMsg.style.display = 'none';
-        
-        const ctx = canvas.getContext('2d');
+        const ctx = document.getElementById('chartFirmadoGlobal').getContext('2d');
         if (chartFirmadoGlobalInstance) chartFirmadoGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label === 'Si' ? 'Firmados' : item.label);
@@ -999,45 +900,7 @@
         }    }
     
     function crearGraficoConformidadGlobal(data) {
-        const chartContainer = document.getElementById('chartConformidadGlobal').parentElement;
-        const canvas = document.getElementById('chartConformidadGlobal');
-        
-        // Verificar si hay datos
-        const tienesDatos = data && data.length > 0 && data.some(item => item.value > 0);
-        
-        if (!tienesDatos) {
-            // Ocultar canvas y mostrar mensaje de sin datos
-            canvas.style.display = 'none';
-            
-            // Eliminar mensaje anterior si existe
-            let noDataMsg = chartContainer.querySelector('.no-data-message');
-            if (!noDataMsg) {
-                noDataMsg = document.createElement('div');
-                noDataMsg.className = 'no-data-message';
-                noDataMsg.innerHTML = `
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <p>Aún no hay datos</p>
-                `;
-                chartContainer.appendChild(noDataMsg);
-            } else {
-                noDataMsg.style.display = 'flex';
-            }
-            
-            // Eliminar leyenda si existe
-            const legendDiv = chartContainer.querySelector('.chart-legend');
-            if (legendDiv) legendDiv.remove();
-            
-            return;
-        }
-        
-        // Mostrar canvas y ocultar mensaje de sin datos
-        canvas.style.display = 'block';
-        const noDataMsg = chartContainer.querySelector('.no-data-message');
-        if (noDataMsg) noDataMsg.style.display = 'none';
-        
-        const ctx = canvas.getContext('2d');
+        const ctx = document.getElementById('chartConformidadGlobal').getContext('2d');
         if (chartConformidadGlobalInstance) chartConformidadGlobalInstance.destroy();
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
@@ -1136,21 +999,23 @@
             
             console.log('Datos agrupados:', { numEmpleados, categorias, firmados, conformidades });
             
-            // Crear gráficos con los datos agrupados (o mostrar mensaje de sin datos)
+            // Crear gráficos con los datos agrupados
             if (numEmpleados && numEmpleados.value > 0) {
                 console.log('✅ Creando gráfico de N° Empleados');
                 crearGraficoNumEmpleadosGlobal([numEmpleados]);
             }
-            
-            // Siempre llamar a las funciones de creación de gráficos para manejar el caso sin datos
-            console.log('✅ Creando/actualizando gráfico de Categorías');
-            crearGraficoCategoriasGlobal(categorias || []);
-            
-            console.log('✅ Creando/actualizando gráfico de Firmado');
-            crearGraficoFirmadoGlobal(firmados || []);
-            
-            console.log('✅ Creando/actualizando gráfico de Conformidad');
-            crearGraficoConformidadGlobal(conformidades || []);
+            if (categorias && categorias.length > 0) {
+                console.log('✅ Creando gráfico de Categorías');
+                crearGraficoCategoriasGlobal(categorias);
+            }
+            if (firmados && firmados.length > 0) {
+                console.log('✅ Creando gráfico de Firmado');
+                crearGraficoFirmadoGlobal(firmados);
+            }
+            if (conformidades && conformidades.length > 0) {
+                console.log('✅ Creando gráfico de Conformidad');
+                crearGraficoConformidadGlobal(conformidades);
+            }
             
             // Ocultar mensaje de carga y mostrar gráficos
             document.getElementById('panelEstado').classList.add('hidden');
