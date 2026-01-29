@@ -690,6 +690,10 @@
         const chartBox = document.getElementById('chartCategoriasGlobal').closest('.chart-box');
         chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
+        // Si solo hay un valor (100%), no mostrar borde
+        const borderWidth = labels.length === 1 ? 0 : 3;
+        const borderColor = labels.length === 1 ? 'transparent' : '#fff';
+        
         chartCategoriasGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -697,8 +701,8 @@
                 datasets: [{
                     data: values,
                     backgroundColor: colors.slice(0, labels.length),
-                    borderWidth: 3,
-                    borderColor: '#fff',
+                    borderWidth: borderWidth,
+                    borderColor: borderColor,
                     hoverOffset: 8
                 }]
             },
@@ -718,12 +722,14 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 12 },
+                        font: { weight: 'bold', size: 14 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
                             return percentage + '%';
-                        }
+                        },
+                        anchor: 'center',
+                        align: 'center'
                     }
                 }
             },
@@ -768,6 +774,10 @@
         const chartBox = document.getElementById('chartFirmadoGlobal').closest('.chart-box');
         chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
+        // Si solo hay un valor (100%), no mostrar borde
+        const borderWidth = labels.length === 1 ? 0 : 3;
+        const borderColor = labels.length === 1 ? 'transparent' : '#fff';
+        
         chartFirmadoGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -775,8 +785,8 @@
                 datasets: [{
                     data: values,
                     backgroundColor: colors,
-                    borderWidth: 3,
-                    borderColor: '#fff',
+                    borderWidth: borderWidth,
+                    borderColor: borderColor,
                     hoverOffset: 8
                 }]
             },
@@ -796,12 +806,14 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 12 },
+                        font: { weight: 'bold', size: 14 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
                             return percentage + '%';
-                        }
+                        },
+                        anchor: 'center',
+                        align: 'center'
                     }
                 }
             },
@@ -919,6 +931,10 @@
         const chartBox = document.getElementById('chartConformidadGlobal').closest('.chart-box');
         chartBox.style.setProperty('--dynamic-gradient', `linear-gradient(90deg, ${gradientColors})`);
         
+        // Si solo hay un valor (100%), no mostrar borde
+        const borderWidth = labels.length === 1 ? 0 : 3;
+        const borderColor = labels.length === 1 ? 'transparent' : '#fff';
+        
         chartConformidadGlobalInstance = new Chart(ctx, {
             type: 'pie',
             data: {
@@ -926,8 +942,8 @@
                 datasets: [{
                     data: values,
                     backgroundColor: colors,
-                    borderWidth: 3,
-                    borderColor: '#fff',
+                    borderWidth: borderWidth,
+                    borderColor: borderColor,
                     hoverOffset: 8
                 }]
             },
@@ -947,12 +963,14 @@
                     },
                     datalabels: {
                         color: '#fff',
-                        font: { weight: 'bold', size: 12 },
+                        font: { weight: 'bold', size: 14 },
                         formatter: (value, ctx) => {
                             const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
                             const percentage = ((value / total) * 100).toFixed(1);
                             return percentage + '%';
-                        }
+                        },
+                        anchor: 'center',
+                        align: 'center'
                     }
                 }
             },
