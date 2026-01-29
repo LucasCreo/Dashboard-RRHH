@@ -196,7 +196,7 @@
             --btn-color: #a8b8d8;
         }
         .action-button.firmados {
-            --btn-color: #43e97b;
+            --btn-color: #dc3545;
         }
 
         .hidden { 
@@ -510,8 +510,8 @@
             Legajos
         </div>
         
-        <div class="action-button firmados" onclick="irAFirmados()">
-            Firmados
+        <div class="action-button firmados" onclick="irARecibosDisconformes()">
+            Recibos Disconformes
         </div>
         
         <div class="action-button pendientes" onclick="irAPendientes()">
@@ -1068,9 +1068,9 @@
         window.location.href = url;
     }
     
-    function irAFirmados() {
-        console.log('✅ Navegando a Firmados...');
-        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%22e4d50f55-597e-4338-b30e-034034004b6e%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22c67cdebf-2665-408a-90d3-fd74ad528dc1%22%7D%5D%7D&title=Recibos+Firmados&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
+    function irARecibosDisconformes() {
+        console.log('✅ Navegando a Recibos Disconformes...');
+        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2236f6620c-721d-4acb-bb43-b5999cb5f6ea%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22c67cdebf-2665-408a-90d3-fd74ad528dc1%22%7D%2C%7B%22id%22%3A%22122e89af-b907-493e-a1b1-4509f64f0490%22%2C%22field%22%3A%22conformidad%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22Disconforme%22%7D%5D%7D&title=Recibos+Disconformes&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
         const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${callback}`;
         window.location.href = url;
     }
