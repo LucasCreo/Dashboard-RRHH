@@ -510,12 +510,12 @@
             Legajos
         </div>
         
-        <div class="action-button firmados" onclick="irARecibosDisconformes()">
-            Recibos Disconformes
-        </div>
-        
         <div class="action-button pendientes" onclick="irAPendientes()">
             Pendientes de Firma
+        </div>
+        
+        <div class="action-button firmados" onclick="irARecibosDisconformes()">
+            Recibos Disconformes
         </div>
     </div>
 </div>
@@ -917,7 +917,7 @@
         
         const labels = data.filter(item => item.value > 0).map(item => item.label);
         const values = data.filter(item => item.value > 0).map(item => item.value);
-        const colorMap = { 'Conforme': '#4facfe', 'Disconforme': '#fee140', 'Pendiente': '#a8b8d8' };
+        const colorMap = { 'Conforme': '#4facfe', 'Disconforme': '#dc3545', 'Pendiente': '#a8b8d8' };
         const colors = labels.map(label => colorMap[label] || '#a8b8d8');
         
         // Crear array de datos con colores y ordenar por valor descendente
@@ -1063,15 +1063,33 @@
     
     function irAPendientes() {
         console.log('⏰ Navegando a Pendientes de Firma...');
-        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22or%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2267631d82-0173-425e-b7f7-4733c944e9d6%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22No%22%7D%2C%7B%22id%22%3A%226aa50f48-1278-4842-bf1e-f927855a3ae3%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22null%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22%22%7D%2C%7B%22id%22%3A%2264b4aff3-4b4b-49bc-8c42-ed634f71f3eb%22%2C%22rules%22%3A%5B%7B%22id%22%3A%22f828b219-160e-430c-b7b7-df214a187566%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%226f5abc1c-24fe-4010-94fe-1771191ebc90%22%7D%5D%2C%22combinator%22%3A%22and%22%2C%22not%22%3Afalse%7D%2C%7B%22id%22%3A%22362a82aa-5b8b-484d-911a-95ff3f9be89b%22%2C%22field%22%3A%22firmado%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22NO%22%7D%5D%7D&title=Pendientes+de+Firma&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
-        const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${callback}`;
+        const filter = {
+            combinator: "or",
+            rules: [
+                {id: "67631d82-0173-425e-b7f7-4733c944e9d6", field: "firmado", operator: "=", valueSource: "value", value: "No"},
+                {id: "6aa50f48-1278-4842-bf1e-f927855a3ae3", field: "firmado", operator: "null", valueSource: "value", value: ""},
+                {id: "64b4aff3-4b4b-49bc-8c42-ed634f71f3eb", rules: [{id: "f828b219-160e-430c-b7b7-df214a187566", field: "object_definition_id", operator: "=", valueSource: "value", value: "6f5abc1c-24fe-4010-94fe-1771191ebc90"}], combinator: "and", not: false},
+                {id: "362a82aa-5b8b-484d-911a-95ff3f9be89b", field: "firmado", operator: "=", valueSource: "value", value: "NO"}
+            ]
+        };
+        const sort = ["updated_at desc", "version_label desc"];
+        const callback = `/widgets/query?filter=${encodeURIComponent(JSON.stringify(filter))}&title=${encodeURIComponent('Pendientes de Firma')}&sort=${encodeURIComponent(JSON.stringify(sort))}&disableFilter=true`;
+        const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${encodeURIComponent(callback)}`;
         window.location.href = url;
     }
     
     function irARecibosDisconformes() {
         console.log('✅ Navegando a Recibos Disconformes...');
-        const callback = '/widgets/query?filter=%7B%22combinator%22%3A%22and%22%2C%22rules%22%3A%5B%7B%22id%22%3A%2236f6620c-721d-4acb-bb43-b5999cb5f6ea%22%2C%22field%22%3A%22object_definition_id%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22c67cdebf-2665-408a-90d3-fd74ad528dc1%22%7D%2C%7B%22id%22%3A%22122e89af-b907-493e-a1b1-4509f64f0490%22%2C%22field%22%3A%22conformidad%22%2C%22operator%22%3A%22%3D%22%2C%22valueSource%22%3A%22value%22%2C%22value%22%3A%22Disconforme%22%7D%5D%7D&title=Recibos+Disconformes&sort=%5B%22updated_at+desc%22%2C%22version_label+desc%22%5D';
-        const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${callback}`;
+        const filter = {
+            combinator: "and",
+            rules: [
+                {id: "36f6620c-721d-4acb-bb43-b5999cb5f6ea", field: "object_definition_id", operator: "=", valueSource: "value", value: "c67cdebf-2665-408a-90d3-fd74ad528dc1"},
+                {id: "122e89af-b907-493e-a1b1-4509f64f0490", field: "conformidad", operator: "=", valueSource: "value", value: "Disconforme"}
+            ]
+        };
+        const sort = ["updated_at desc", "version_label desc"];
+        const callback = `/widgets/query?filter=${encodeURIComponent(JSON.stringify(filter))}&title=${encodeURIComponent('Recibos Disconformes')}&sort=${encodeURIComponent(JSON.stringify(sort))}&disableFilter=true&showAddButton=false`;
+        const url = `https://ecm-web-desktop.aditus-demo.com.ar/loginWithToken?library=${encodeURIComponent(LIBRARY)}&token=${encodeURIComponent(TOKEN)}&callback=${encodeURIComponent(callback)}`;
         window.location.href = url;
     }
     
